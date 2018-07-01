@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="InterviewAcerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="InterviewDetail">
+    <Key>
+      <PropertyRef Name="InterviewDetailId" />
+    </Key>
+    <Property Name="InterviewDetailId" Type="Int32" Nullable="false" />
+    <Property Name="CompanyName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Designation" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="InterviewDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="InterviewTypeId" Type="Int32" Nullable="false" />
+    <Property Name="HiringIndividualName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="UserName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="InterviewType" Relationship="Self.FK_InterviewDetails_InterviewTypes" FromRole="InterviewDetails" ToRole="InterviewTypes" />
+  </EntityType>
+  <EntityType Name="InterviewType">
+    <Key>
+      <PropertyRef Name="InterviewTypeId" />
+    </Key>
+    <Property Name="InterviewTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="InterviewTypeName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="InterviewDetails" Relationship="Self.FK_InterviewDetails_InterviewTypes" FromRole="InterviewTypes" ToRole="InterviewDetails" />
+  </EntityType>
+  <Association Name="FK_InterviewDetails_InterviewTypes">
+    <End Role="InterviewTypes" Type="Self.InterviewType" Multiplicity="1" />
+    <End Role="InterviewDetails" Type="Self.InterviewDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="InterviewTypes">
+        <PropertyRef Name="InterviewTypeId" />
+      </Principal>
+      <Dependent Role="InterviewDetails">
+        <PropertyRef Name="InterviewTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="InterviewAcerDbContext" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="InterviewDetails" EntityType="Self.InterviewDetail" />
+    <EntitySet Name="InterviewTypes" EntityType="Self.InterviewType" />
+    <AssociationSet Name="FK_InterviewDetails_InterviewTypes" Association="Self.FK_InterviewDetails_InterviewTypes">
+      <End Role="InterviewTypes" EntitySet="InterviewTypes" />
+      <End Role="InterviewDetails" EntitySet="InterviewDetails" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
