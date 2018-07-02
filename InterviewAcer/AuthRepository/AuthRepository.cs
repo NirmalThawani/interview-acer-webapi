@@ -29,7 +29,13 @@ namespace InterviewAcer.AuthRepository
                 LicenseKey = userModel.LicenseKey
             };
 
-            
+            _userManager.UserValidator = new UserValidator<ApplicationUser>(_userManager)
+            {
+                AllowOnlyAlphanumericUserNames = false,
+                RequireUniqueEmail = true
+            };
+
+
             var result = await _userManager.CreateAsync(user, userModel.Password);
 
             return result;
@@ -52,6 +58,8 @@ namespace InterviewAcer.AuthRepository
             _userManager.RemovePassword(userId);
             return await _userManager.AddPasswordAsync(userId, password);
         }
+
+
 
         public void Dispose()
         {

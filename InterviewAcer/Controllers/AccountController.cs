@@ -5,11 +5,14 @@ using InterviewAcer.RequestClasses;
 using InterviewAcer.ResponseClasses;
 using Microsoft.AspNet.Identity;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
+using System.Net.Http;
 using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 
 namespace InterviewAcer.Controllers
@@ -28,23 +31,54 @@ namespace InterviewAcer.Controllers
         // POST api/Account/Register
         [AllowAnonymous]
         [Route("Register")]
-        public async Task<IHttpActionResult> Register(UserModel userModel)
+        public async Task<HttpResponseMessage> Register(UserModel userModel)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return Request.CreateResponse(System.Net.HttpStatusCode.BadRequest, ModelState);
             }
 
             IdentityResult result = await _repo.RegisterUser(userModel);
 
-            IHttpActionResult errorResult = GetErrorResult(result);
+            HttpResponseMessage errorResult = GetErrorResult(result);
 
             if (errorResult != null)
             {
                 return errorResult;
             }
+            else
+            {
+                return await LoginUser(userModel.Email, userModel.Password);
+            }
+        }
 
-            return Ok();
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("Login")]
+        public async Task<HttpResponseMessage> LoginUser(string username, string password)
+        {
+            // Invoke the "token" OWIN service to perform the login: /api/token
+            // Ugly hack: I use a server-side HTTP POST because I cannot directly invoke the service (it is deeply hidden in the OAuthAuthorizationServerHandler class)
+            var request = HttpContext.Current.Request;
+            var tokenServiceUrl = request.Url.GetLeftPart(UriPartial.Authority) + request.ApplicationPath + "/Token";
+            using (var client = new HttpClient())
+            {
+                var requestParams = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("grant_type", "password"),
+                new KeyValuePair<string, string>("username", username),
+                new KeyValuePair<string, string>("password", password)
+            };
+                var requestParamsFormUrlEncoded = new FormUrlEncodedContent(requestParams);
+                var tokenServiceResponse = await client.PostAsync(tokenServiceUrl, requestParamsFormUrlEncoded);
+                var responseString = await tokenServiceResponse.Content.ReadAsStringAsync();
+                var responseCode = tokenServiceResponse.StatusCode;
+                var responseMsg = new HttpResponseMessage(responseCode)
+                {
+                    Content = new StringContent(responseString, Encoding.UTF8, "application/json")
+                };
+                return responseMsg;
+            }
         }
 
         /// <summary>
@@ -54,7 +88,7 @@ namespace InterviewAcer.Controllers
         /// <returns>If user is found, userid is returned. If user is not found NotFound status code is returned</returns>
         [AllowAnonymous]
         [HttpGet]
-        [Route("FindUserAndSendOTP")]       
+        [Route("FindUserAndSendOTP")]
         public async Task<IHttpActionResult> FindUser(string userName)
         {
             try
@@ -79,11 +113,11 @@ namespace InterviewAcer.Controllers
                     return Ok(userIdResponse);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return InternalServerError(e);
             }
-          
+
         }
 
         private void SendEmail(string OTP, string userEmailAddress)
@@ -103,7 +137,7 @@ namespace InterviewAcer.Controllers
         /// <returns>If OTP is valid status code 200 is returned. If OTP is not valid status code 404 is returned.</returns>
         [AllowAnonymous]
         [HttpPost]
-        [Route("VerifyOTP")]        
+        [Route("VerifyOTP")]
         public async Task<IHttpActionResult> VerifyOTP(VerifyOtpRequest verifyOtp)
         {
             try
@@ -118,11 +152,11 @@ namespace InterviewAcer.Controllers
                     return NotFound();
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return InternalServerError(e);
             }
-          
+
         }
         [AllowAnonymous]
         [HttpPost]
@@ -134,7 +168,7 @@ namespace InterviewAcer.Controllers
         /// <returns>returns 200 status code, if password reset is success</returns>
         public async Task<IHttpActionResult> ResetPassword(ResetPasswordRequest resetPasswordDetails)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -145,7 +179,7 @@ namespace InterviewAcer.Controllers
                     await _repo.ResetPassword(resetPasswordDetails.NewPassword, resetPasswordDetails.UserId);
                 return Ok("password reset successfully");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return InternalServerError(e);
             }
@@ -161,11 +195,11 @@ namespace InterviewAcer.Controllers
             base.Dispose(disposing);
         }
 
-        private IHttpActionResult GetErrorResult(IdentityResult result)
+        private HttpResponseMessage GetErrorResult(IdentityResult result)
         {
             if (result == null)
             {
-                return InternalServerError();
+                return Request.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
             }
 
             if (!result.Succeeded)
@@ -181,10 +215,10 @@ namespace InterviewAcer.Controllers
                 if (ModelState.IsValid)
                 {
                     // No ModelState errors are available to send, so just return an empty BadRequest.
-                    return BadRequest();
+                    return Request.CreateResponse(System.Net.HttpStatusCode.BadRequest);
                 }
 
-                return BadRequest(ModelState);
+                return Request.CreateResponse(ModelState);
             }
 
             return null;
@@ -216,7 +250,7 @@ namespace InterviewAcer.Controllers
             }
             //This will be the password change identifier 
             //that the user will be sent out
-           return token.ToString();
+            return token.ToString();
         }
     }
 }
