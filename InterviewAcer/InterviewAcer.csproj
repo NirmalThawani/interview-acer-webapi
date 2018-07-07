@@ -260,6 +260,7 @@
     <Compile Include="AuthContext\AuthContext.cs" />
     <Compile Include="AuthProvider\SimpleAuthorizationServerProvider.cs" />
     <Compile Include="AuthRepository\AuthRepository.cs" />
+    <Compile Include="AuthRepository\RegisterRoles.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\InterviewController.cs" />
     <Compile Include="Global.asax.cs">
@@ -270,6 +271,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestClasses\ResetPasswordRequest.cs" />
     <Compile Include="RequestClasses\VerifyOtpRequest.cs" />
+    <Compile Include="ResponseClasses\ErrorResponse.cs" />
     <Compile Include="ResponseClasses\UserIdResponse.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

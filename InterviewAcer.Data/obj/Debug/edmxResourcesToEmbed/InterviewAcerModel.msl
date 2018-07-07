@@ -4,6 +4,7 @@
     <EntitySetMapping Name="InterviewDetails">
       <EntityTypeMapping TypeName="InterviewAcerModel.InterviewDetail">
         <MappingFragment StoreEntitySet="InterviewDetails">
+          <ScalarProperty Name="ColorCode" ColumnName="ColorCode" />
           <ScalarProperty Name="InterviewDetailId" ColumnName="InterviewDetailId" />
           <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
           <ScalarProperty Name="Designation" ColumnName="Designation" />

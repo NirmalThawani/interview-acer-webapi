@@ -21,6 +21,7 @@ namespace InterviewAcer.Data
         public int InterviewTypeId { get; set; }
         public string HiringIndividualName { get; set; }
         public string UserName { get; set; }
+        public string ColorCode { get; set; }
     
         public virtual InterviewType InterviewType { get; set; }
     }

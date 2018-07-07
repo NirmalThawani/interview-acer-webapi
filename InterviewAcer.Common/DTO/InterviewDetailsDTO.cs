@@ -17,5 +17,7 @@ namespace InterviewAcer.Common.DTO
         public int InterviewTypeId { get; set; }
         [MaxLength(50)]
         public string HiringIndividualName { get; set; }
+
+        public string Tag { get; set; }
     }
 }

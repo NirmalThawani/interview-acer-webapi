@@ -40,5 +40,15 @@
       <End Role="InterviewTypes" EntitySet="InterviewTypes" />
       <End Role="InterviewDetails" EntitySet="InterviewDetails" />
     </AssociationSet>
+    <EntitySet Name="ForgotPasswords" EntityType="InterviewAcerModel.ForgotPassword" />
   </EntityContainer>
+  <EntityType Name="ForgotPassword">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="OTP" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
 </Schema>

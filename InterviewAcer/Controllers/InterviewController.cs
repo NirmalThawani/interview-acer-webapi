@@ -1,7 +1,6 @@
 ﻿using System.Web.Http;
 using InterviewAcer.Repository.Contract;
 using InterviewAcer.Repository.Implementation;
-using InterviewAcer.Repository;
 using System.Threading.Tasks;
 using InterviewAcer.Common.DTO;
 using System;
@@ -52,7 +51,6 @@ namespace InterviewAcer.Controllers
         /// </summary>
         /// <param name="interviewDetails"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpPost]
         [Route("api/SaveInterview")]
         public async Task<IHttpActionResult> SaveInterviewDetails(InterviewDetailsDTO interviewDetails)

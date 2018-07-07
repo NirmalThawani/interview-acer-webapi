@@ -1,12 +1,9 @@
 ﻿using InterviewAcer.Common.DTO;
 using InterviewAcer.Data;
-
 using InterviewAcer.Repository.Contract;
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace InterviewAcer.Repository.Implementation
@@ -31,6 +28,7 @@ namespace InterviewAcer.Repository.Implementation
                 interviewDetailItem.HiringIndividualName = item.HiringIndividualName;
                 interviewDetailItem.InterviewDate = item.InterviewDate;
                 interviewDetailItem.InterviewTypeId = item.InterviewTypeId;
+                interviewDetailItem.Tag = item.ColorCode;
                 interviewDetailsList.Add(interviewDetailItem);
             }
             return interviewDetailsList;
@@ -45,6 +43,7 @@ namespace InterviewAcer.Repository.Implementation
             interviewDetailEntity.InterviewDate = interviewDetails.InterviewDate;            
             interviewDetailEntity.InterviewTypeId = interviewDetails.InterviewTypeId;
             interviewDetailEntity.UserName = userName;
+            interviewDetailEntity.ColorCode = interviewDetails.Tag;
             _dbContext.InterviewDetails.Add(interviewDetailEntity);
         }
     }

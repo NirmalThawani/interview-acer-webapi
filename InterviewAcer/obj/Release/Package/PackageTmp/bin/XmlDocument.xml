@@ -481,6 +481,20 @@
             </summary>
             <param name="documentPath">The physical path to XML document.</param>
         </member>
+        <member name="M:InterviewAcer.Controllers.AccountController.FindUser(System.String)">
+            <summary>
+            if user exists, sends an OTP to registered Email address
+            </summary>
+            <param name="userName"></param>
+            <returns>If user is found, userid is returned. If user is not found NotFound status code is returned</returns>
+        </member>
+        <member name="M:InterviewAcer.Controllers.AccountController.VerifyOTP(InterviewAcer.RequestClasses.VerifyOtpRequest)">
+            <summary>
+            verifies the OTP entered from user
+            </summary>
+            <param name="verifyOtp"></param>
+            <returns>If OTP is valid status code 200 is returned. If OTP is not valid status code 404 is returned.</returns>
+        </member>
         <member name="M:InterviewAcer.Controllers.InterviewController.GetInterviewDetails">
             <summary>
             Gets the list of interviews added by the logged In User

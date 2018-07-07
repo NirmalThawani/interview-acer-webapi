@@ -20,6 +20,7 @@
     <Property Name="InterviewTypeId" Type="int" Nullable="false" />
     <Property Name="HiringIndividualName" Type="nvarchar(max)" />
     <Property Name="UserName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ColorCode" Type="nvarchar(max)" />
   </EntityType>
   <EntityType Name="InterviewTypes">
     <Key>

@@ -25,6 +25,7 @@
           <Property Name="InterviewTypeId" Type="int" Nullable="false" />
           <Property Name="HiringIndividualName" Type="nvarchar(max)" />
           <Property Name="UserName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ColorCode" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="InterviewTypes">
           <Key>
@@ -70,6 +71,7 @@
           <Property Name="HiringIndividualName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="UserName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="InterviewType" Relationship="Self.FK_InterviewDetails_InterviewTypes" FromRole="InterviewDetails" ToRole="InterviewTypes" />
+          <Property Name="ColorCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="InterviewType">
           <Key>
@@ -118,6 +120,7 @@
           <EntitySetMapping Name="InterviewDetails">
             <EntityTypeMapping TypeName="InterviewAcerModel.InterviewDetail">
               <MappingFragment StoreEntitySet="InterviewDetails">
+                <ScalarProperty Name="ColorCode" ColumnName="ColorCode" />
                 <ScalarProperty Name="InterviewDetailId" ColumnName="InterviewDetailId" />
                 <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
                 <ScalarProperty Name="Designation" ColumnName="Designation" />

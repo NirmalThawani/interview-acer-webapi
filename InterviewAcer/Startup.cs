@@ -1,4 +1,5 @@
-﻿using Microsoft.Owin;
+﻿using InterviewAcer.AuthRepository;
+using Microsoft.Owin;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
 using System;
@@ -15,6 +16,8 @@ namespace InterviewAcer
             WebApiConfig.Register(config);
             app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
             app.UseWebApi(config);
+
+            RegisterRoles.SeedRoles();
         }
 
         public void ConfigureOAuth(IAppBuilder app)

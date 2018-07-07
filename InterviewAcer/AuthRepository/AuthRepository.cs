@@ -6,16 +6,18 @@ using System;
 
 namespace InterviewAcer.AuthRepository
 {
-    public class AuthRepository: IDisposable
+    public class AuthRepository : IDisposable
     {
         private AuthContext.AuthContext _ctx;
 
         private UserManager<ApplicationUser> _userManager;
+        private RoleManager<IdentityRole> _roleManager;
 
         public AuthRepository()
         {
             _ctx = new AuthContext.AuthContext();
             _userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_ctx));
+            _roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_ctx));
         }
 
         public async Task<IdentityResult> RegisterUser(UserModel userModel)
@@ -41,9 +43,15 @@ namespace InterviewAcer.AuthRepository
             return result;
         }
 
+        public async Task<IdentityRole> GetRole(string Id)
+        {
+            return await _roleManager.FindByIdAsync(Id);
+        }
+
+
         public async Task<ApplicationUser> FindUser(string userName, string password)
         {
-            ApplicationUser user = await _userManager.FindAsync(userName, password);            
+            ApplicationUser user = await _userManager.FindAsync(userName, password);
             return user;
         }
 

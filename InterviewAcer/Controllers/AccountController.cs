@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Mail;
 using System.Security.Cryptography;
@@ -35,7 +36,10 @@ namespace InterviewAcer.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return Request.CreateResponse(System.Net.HttpStatusCode.BadRequest, ModelState);
+                var error = new ErrorResponse();
+                error.Error = "Registration Failed";
+                error.ErrorDescription = ModelState.Values.First().Errors.First().ErrorMessage;
+                return Request.CreateResponse(System.Net.HttpStatusCode.BadRequest, error);
             }
 
             IdentityResult result = await _repo.RegisterUser(userModel);
@@ -206,19 +210,15 @@ namespace InterviewAcer.Controllers
             {
                 if (result.Errors != null)
                 {
-                    foreach (string error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error);
-                    }
+                    ErrorResponse error = new ErrorResponse();
+                    error.Error = "Registration Failed";
+                    error.ErrorDescription = result.Errors.First();
+                    return Request.CreateResponse(System.Net.HttpStatusCode.BadRequest, error);
                 }
 
-                if (ModelState.IsValid)
-                {
-                    // No ModelState errors are available to send, so just return an empty BadRequest.
-                    return Request.CreateResponse(System.Net.HttpStatusCode.BadRequest);
-                }
 
-                return Request.CreateResponse(ModelState);
+                // No ModelState errors are available to send, so just return an empty BadRequest.
+                return Request.CreateResponse(System.Net.HttpStatusCode.BadRequest);
             }
 
             return null;
