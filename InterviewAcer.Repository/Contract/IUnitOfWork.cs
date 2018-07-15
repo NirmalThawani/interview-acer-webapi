@@ -8,5 +8,6 @@ namespace InterviewAcer.Repository.Contract
         Task<int> Save();
         InterviewRepository GetInterviewRepository();
         ForgotPasswordRepository GetForgotPasswordRepository();
+        StageRepository GetStageRepository();
     }
 }

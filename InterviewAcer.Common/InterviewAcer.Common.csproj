@@ -42,8 +42,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="DTO\CheckListDTO.cs" />
     <Compile Include="DTO\ForgotPasswordDTO.cs" />
+    <Compile Include="DTO\GroupDTO.cs" />
+    <Compile Include="DTO\InterviewCurrentStatusDTO.cs" />
     <Compile Include="DTO\InterviewDetailsDTO.cs" />
+    <Compile Include="DTO\StageDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

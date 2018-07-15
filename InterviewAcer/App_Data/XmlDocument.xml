@@ -508,5 +508,19 @@
             <param name="interviewDetails"></param>
             <returns></returns>
         </member>
+        <member name="M:InterviewAcer.Controllers.InterviewController.GetStageDetails(System.Int32)">
+            <summary>
+            Gets all data for stages of interview type
+            </summary>
+            <param name="interviewType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:InterviewAcer.Controllers.InterviewController.UpdateCheckList(InterviewAcer.RequestClasses.UpdateCheckListRequest)">
+            <summary>
+            Update the checklist for an interview
+            </summary>
+            <param name="updateCheckList"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

@@ -11,6 +11,7 @@ namespace InterviewAcer.Repository.Implementation
         private InterviewAcerDbContext _context = new InterviewAcerDbContext();
         private InterviewRepository _interviewRepoitory;
         private ForgotPasswordRepository _forgotPasswordRepository;
+        private StageRepository _stageRepository;
     
 
         public InterviewRepository GetInterviewRepository()
@@ -29,6 +30,15 @@ namespace InterviewAcer.Repository.Implementation
                 this._forgotPasswordRepository = new ForgotPasswordRepository(_context);
             }
             return _forgotPasswordRepository;
+        }
+
+        public StageRepository GetStageRepository()
+        {
+            if(this._stageRepository == null)
+            {
+                this._stageRepository = new StageRepository(_context);
+            }
+            return _stageRepository;
         }
 
         public void Dispose()

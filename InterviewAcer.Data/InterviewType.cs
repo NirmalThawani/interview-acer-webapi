@@ -18,6 +18,7 @@ namespace InterviewAcer.Data
         public InterviewType()
         {
             this.InterviewDetails = new HashSet<InterviewDetail>();
+            this.Stages = new HashSet<Stage>();
         }
     
         public int InterviewTypeId { get; set; }
@@ -25,5 +26,7 @@ namespace InterviewAcer.Data
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<InterviewDetail> InterviewDetails { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Stage> Stages { get; set; }
     }
 }

@@ -12,6 +12,8 @@ namespace InterviewAcer.Data
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class InterviewAcerDbContext : DbContext
     {
@@ -28,5 +30,18 @@ namespace InterviewAcer.Data
         public virtual DbSet<InterviewDetail> InterviewDetails { get; set; }
         public virtual DbSet<InterviewType> InterviewTypes { get; set; }
         public virtual DbSet<ForgotPassword> ForgotPasswords { get; set; }
+        public virtual DbSet<GroupCheckList> GroupCheckLists { get; set; }
+        public virtual DbSet<StageGroup> StageGroups { get; set; }
+        public virtual DbSet<Stage> Stages { get; set; }
+        public virtual DbSet<InterviewCheckListMapping> InterviewCheckListMappings { get; set; }
+    
+        public virtual ObjectResult<GetInterviewStage_Result> GetInterviewStage(Nullable<int> interviewId)
+        {
+            var interviewIdParameter = interviewId.HasValue ?
+                new ObjectParameter("InterviewId", interviewId) :
+                new ObjectParameter("InterviewId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetInterviewStage_Result>("GetInterviewStage", interviewIdParameter);
+        }
     }
 }

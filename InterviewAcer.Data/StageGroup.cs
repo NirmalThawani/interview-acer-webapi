@@ -12,25 +12,21 @@ namespace InterviewAcer.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class InterviewDetail
+    public partial class StageGroup
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public InterviewDetail()
+        public StageGroup()
         {
-            this.InterviewCheckListMappings = new HashSet<InterviewCheckListMapping>();
+            this.GroupCheckLists = new HashSet<GroupCheckList>();
         }
     
-        public int InterviewDetailId { get; set; }
-        public string CompanyName { get; set; }
-        public string Designation { get; set; }
-        public System.DateTime InterviewDate { get; set; }
-        public int InterviewTypeId { get; set; }
-        public string HiringIndividualName { get; set; }
-        public string UserName { get; set; }
-        public string ColorCode { get; set; }
+        public int Id { get; set; }
+        public int StageId { get; set; }
+        public string GroupName { get; set; }
+        public int Sequence { get; set; }
     
-        public virtual InterviewType InterviewType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<InterviewCheckListMapping> InterviewCheckListMappings { get; set; }
+        public virtual ICollection<GroupCheckList> GroupCheckLists { get; set; }
+        public virtual Stage Stage { get; set; }
     }
 }

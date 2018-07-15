@@ -53,6 +53,7 @@
     <Compile Include="Contract\IUnitOfWork.cs" />
     <Compile Include="Implementation\ForgotPasswordRepository.cs" />
     <Compile Include="Implementation\InterviewRepository.cs" />
+    <Compile Include="Implementation\StageRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Implementation\UnitOfWork.cs" />
   </ItemGroup>

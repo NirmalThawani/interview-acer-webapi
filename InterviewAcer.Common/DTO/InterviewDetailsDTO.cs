@@ -8,6 +8,7 @@ namespace InterviewAcer.Common.DTO
         [Required]
         [MaxLength(50)]
         public string CompanyName { get; set; }
+        public int InterviewId { get; set; }
         [Required]
         [MaxLength(50)]
         public string Designation { get; set; }
@@ -17,7 +18,8 @@ namespace InterviewAcer.Common.DTO
         public int InterviewTypeId { get; set; }
         [MaxLength(50)]
         public string HiringIndividualName { get; set; }
-
+        public string CurrentStageName { get; set; }
+        public int CurrentStageId { get; set; }
         public string Tag { get; set; }
     }
 }

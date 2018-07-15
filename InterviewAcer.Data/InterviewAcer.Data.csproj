@@ -54,6 +54,12 @@
     <Compile Include="ForgotPassword.cs">
       <DependentUpon>InterviewAcerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="GetInterviewStage_Result.cs">
+      <DependentUpon>InterviewAcerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GroupCheckList.cs">
+      <DependentUpon>InterviewAcerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="InterviewAcerModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -69,6 +75,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>InterviewAcerModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="InterviewCheckListMapping.cs">
+      <DependentUpon>InterviewAcerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="InterviewDetail.cs">
       <DependentUpon>InterviewAcerModel.tt</DependentUpon>
     </Compile>
@@ -76,6 +85,12 @@
       <DependentUpon>InterviewAcerModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Stage.cs">
+      <DependentUpon>InterviewAcerModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StageGroup.cs">
+      <DependentUpon>InterviewAcerModel.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
