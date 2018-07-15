@@ -515,6 +515,13 @@
             <param name="interviewType"></param>
             <returns></returns>
         </member>
+        <member name="M:InterviewAcer.Controllers.InterviewController.GetCompletedCheckList(System.Int32)">
+            <summary>
+            Gets the checklist which are completed in the interview
+            </summary>
+            <param name="interviewId"></param>
+            <returns></returns>
+        </member>
         <member name="M:InterviewAcer.Controllers.InterviewController.UpdateCheckList(InterviewAcer.RequestClasses.UpdateCheckListRequest)">
             <summary>
             Update the checklist for an interview

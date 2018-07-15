@@ -111,6 +111,12 @@ namespace InterviewAcer.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Gets the checklist which are completed in the interview
+        /// </summary>
+        /// <param name="interviewId"></param>
+        /// <returns></returns>
         [Authorize]
         [HttpGet]
         [Route("api/GetCompletedCheckList")]
