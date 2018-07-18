@@ -21,5 +21,6 @@ namespace InterviewAcer.Common.DTO
         public string CurrentStageName { get; set; }
         public int CurrentStageId { get; set; }
         public string Tag { get; set; }
+        public int TotalNumberOfStages { get; set; }
     }
 }

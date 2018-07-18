@@ -33,13 +33,19 @@ namespace InterviewAcer.Repository.Implementation
             return _dbContext.GroupCheckLists.Where(x => x.GroupId == grouId);
         }
 
-        public List<StageDTO> GetAllStageData(int interviewType)
+        public List<StageDTO> GetAllStageData(int interviewType, IQueryable<int> completedCheckList)
         {
+            int totalStageScore;
+            int totalCheckListCount;
+            int completedCheckListCount;
             List<StageDTO> stageDetails = new List<StageDTO>();
             var stages = GetStages(interviewType);
             foreach(var stage in stages)
             {
                 StageDTO stageDetailItem = new StageDTO();
+                totalStageScore = 0;
+                completedCheckListCount = 0;
+                totalCheckListCount = 0;
                 stageDetailItem.Name = stage.StageName;
                 stageDetailItem.StageId = stage.Id;
                 stageDetailItem.Sequence = stage.Sequence;
@@ -59,10 +65,20 @@ namespace InterviewAcer.Repository.Implementation
                         checkListItem.CheckListId = checkList.Id;
                         checkListItem.Name = checkList.Name;
                         checkListItem.Points = checkList.Points;
+                        checkListItem.IsChecked = completedCheckList.Any(x => x == checkList.Id);
+                        if(checkListItem.IsChecked)
+                        {
+                            totalStageScore = totalStageScore + checkList.Points;
+                            completedCheckListCount++;
+                        }
+                        totalCheckListCount++;
                         groupItem.GroupCheckList.Add(checkListItem);
                     }
                     stageDetailItem.StageGroups.Add(groupItem);
                 }
+                stageDetailItem.TotalCheckListCount = totalCheckListCount;
+                stageDetailItem.CompletedCheckListCount = completedCheckListCount;
+                stageDetailItem.StageScore = totalStageScore;
                 stageDetails.Add(stageDetailItem);
             }
             return stageDetails;

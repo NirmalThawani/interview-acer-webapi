@@ -86,11 +86,12 @@ namespace InterviewAcer.Controllers
         /// Gets all data for stages of interview type
         /// </summary>
         /// <param name="interviewType"></param>
+        /// <param name="interviewId"></param>
         /// <returns></returns>
         [Authorize]
         [HttpGet]
         [Route("api/GetStages")]
-        public IHttpActionResult GetStageDetails(int interviewType)
+        public IHttpActionResult GetStageDetails(int interviewType, int interviewId)
         {
             try
             {
@@ -98,7 +99,8 @@ namespace InterviewAcer.Controllers
                 {
                     return BadRequest();
                 }
-                var stages = _unitOfWork.GetStageRepository().GetAllStageData(interviewType);
+                var completedCheckList = _unitOfWork.GetInterviewRepository().GetCompletedCheckList(interviewId);
+                var stages = _unitOfWork.GetStageRepository().GetAllStageData(interviewType, completedCheckList);
                 if (stages == null || stages.Count == 0)
                 {
                     return NotFound();
@@ -117,29 +119,29 @@ namespace InterviewAcer.Controllers
         /// </summary>
         /// <param name="interviewId"></param>
         /// <returns></returns>
-        [Authorize]
-        [HttpGet]
-        [Route("api/GetCompletedCheckList")]
-        public async Task<IHttpActionResult> GetCompletedCheckList(int interviewId)
-        {
-            try
-            {
-                if (interviewId == 0)
-                {
-                    return BadRequest();
-                }
-                var CompletedCheckList = await _unitOfWork.GetInterviewRepository().GetCompletedCheckList(interviewId);
-                if (CompletedCheckList == null || CompletedCheckList.Count == 0)
-                {
-                    return NotFound();
-                }
-                return Ok(CompletedCheckList);
-            }
-            catch (Exception e)
-            {
-                return InternalServerError(e);
-            }
-        }
+        //[Authorize]
+        //[HttpGet]
+        //[Route("api/GetCompletedCheckList")]
+        //public async Task<IHttpActionResult> GetCompletedCheckList(int interviewId)
+        //{
+        //    try
+        //    {
+        //        if (interviewId == 0)
+        //        {
+        //            return BadRequest();
+        //        }
+        //        var CompletedCheckList = await _unitOfWork.GetInterviewRepository().GetCompletedCheckList(interviewId);
+        //        if (CompletedCheckList == null || CompletedCheckList.Count == 0)
+        //        {
+        //            return NotFound();
+        //        }
+        //        return Ok(CompletedCheckList);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return InternalServerError(e);
+        //    }
+        //}
 
         /// <summary>
         /// Update the checklist for an interview

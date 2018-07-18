@@ -30,6 +30,7 @@ namespace InterviewAcer.Repository.Implementation
                 interviewDetailItem.InterviewTypeId = item.InterviewTypeId;
                 interviewDetailItem.Tag = item.ColorCode;
                 interviewDetailItem.InterviewId = item.InterviewDetailId;
+                interviewDetailItem.TotalNumberOfStages = _dbContext.Stages.Where(x => x.InterviewTypeId == interviewDetailItem.InterviewTypeId).Count();
                 GetInterviewStage_Result stageDetails = _dbContext.GetInterviewStage(item.InterviewDetailId).FirstOrDefault();
                 if (stageDetails != null)
                 {
@@ -54,11 +55,12 @@ namespace InterviewAcer.Repository.Implementation
             _dbContext.InterviewDetails.Add(interviewDetailEntity);
         }
 
-        public async Task<List<int>> GetCompletedCheckList(int interviewId)
+        public IQueryable<int> GetCompletedCheckList(int interviewId)
         {
-            List<int> checkListIdList = new List<int>();
-            checkListIdList = await _dbContext.InterviewCheckListMappings.Where(x => x.InterviewId == interviewId).Select(x => x.CheckListId).ToListAsync(); 
-            return checkListIdList;
+            //List<int> checkListIdList = new List<int>();
+            //checkListIdList = await _dbContext.InterviewCheckListMappings.Where(x => x.InterviewId == interviewId).Select(x => x.CheckListId).ToListAsync(); 
+            return _dbContext.InterviewCheckListMappings.Where(x => x.InterviewId == interviewId).Select(x => x.CheckListId);
+            //return checkListIdList;
         }
 
         public bool updateCheckList(int interviewId, int checkListId, bool isChecked)
