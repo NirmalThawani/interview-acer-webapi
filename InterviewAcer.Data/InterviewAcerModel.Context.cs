@@ -43,5 +43,14 @@ namespace InterviewAcer.Data
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetInterviewStage_Result>("GetInterviewStage", interviewIdParameter);
         }
+    
+        public virtual ObjectResult<usp_GetCompletedStages_Result> usp_GetCompletedStages(Nullable<int> interviewId)
+        {
+            var interviewIdParameter = interviewId.HasValue ?
+                new ObjectParameter("interviewId", interviewId) :
+                new ObjectParameter("interviewId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_GetCompletedStages_Result>("usp_GetCompletedStages", interviewIdParameter);
+        }
     }
 }

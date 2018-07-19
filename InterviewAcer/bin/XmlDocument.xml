@@ -513,6 +513,7 @@
             Gets all data for stages of interview type
             </summary>
             <param name="interviewType"></param>
+            <param name="interviewId"></param>
             <returns></returns>
         </member>
         <member name="M:InterviewAcer.Controllers.InterviewController.UpdateCheckList(InterviewAcer.RequestClasses.UpdateCheckListRequest)">

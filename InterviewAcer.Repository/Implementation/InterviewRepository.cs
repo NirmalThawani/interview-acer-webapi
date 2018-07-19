@@ -30,7 +30,17 @@ namespace InterviewAcer.Repository.Implementation
                 interviewDetailItem.InterviewTypeId = item.InterviewTypeId;
                 interviewDetailItem.Tag = item.ColorCode;
                 interviewDetailItem.InterviewId = item.InterviewDetailId;
-                interviewDetailItem.TotalNumberOfStages = _dbContext.Stages.Where(x => x.InterviewTypeId == interviewDetailItem.InterviewTypeId).Count();
+                var stages = _dbContext.Stages.Where(x => x.InterviewTypeId == interviewDetailItem.InterviewTypeId);
+                if (stages != null && stages.Any())
+                {
+                    interviewDetailItem.TotalNumberOfStages = stages.Count();
+                    List<usp_GetCompletedStages_Result> completedStages =  _dbContext.usp_GetCompletedStages(interviewDetailItem.InterviewId).ToList();
+                    if(completedStages != null)
+                    interviewDetailItem.CompletedNumberOfStages = completedStages.Count();
+                }
+                else
+                    interviewDetailItem.TotalNumberOfStages = 0;
+                
                 GetInterviewStage_Result stageDetails = _dbContext.GetInterviewStage(item.InterviewDetailId).FirstOrDefault();
                 if (stageDetails != null)
                 {

@@ -81,5 +81,12 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="usp_GetCompletedStages" FunctionName="InterviewAcerModel.Store.usp_GetCompletedStages">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="InterviewAcerModel.usp_GetCompletedStages_Result">
+          <ScalarProperty Name="StageId" ColumnName="StageId" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
   </EntityContainerMapping>
 </Mapping>

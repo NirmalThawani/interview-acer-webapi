@@ -71,6 +71,9 @@
       <End Role="InterviewDetail" EntitySet="InterviewDetails" />
       <End Role="InterviewCheckListMapping" EntitySet="InterviewCheckListMappings" />
     </AssociationSet>
+    <FunctionImport Name="usp_GetCompletedStages" ReturnType="Collection(InterviewAcerModel.usp_GetCompletedStages_Result)">
+      <Parameter Name="interviewId" Mode="In" Type="Int32" />
+    </FunctionImport>
   </EntityContainer>
   <EntityType Name="ForgotPassword">
     <Key>
@@ -189,4 +192,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <ComplexType Name="usp_GetCompletedStages_Result">
+    <Property Type="Int32" Name="StageId" Nullable="false" />
+  </ComplexType>
 </Schema>
