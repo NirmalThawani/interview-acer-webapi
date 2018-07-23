@@ -189,6 +189,75 @@ namespace InterviewAcer.Controllers
             }
         }
 
+        [Authorize]
+        [HttpPost]
+        [Route("SaveUserPersonalInformation")]
+        public async Task<IHttpActionResult> SavePersonalInfo(UserPersonalInfo personalInfo)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                IdentityResult result = await _repo.SavePersonalInfo(personalInfo);
+                if (!result.Succeeded)
+                {
+                    if (result.Errors != null)
+                    {
+                        return BadRequest(result.Errors.First());
+                    }
+                    else
+                    {
+                        return BadRequest();
+                    }
+                }
+                else
+                {
+                    return Ok();
+                }
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("GetUserPeronalInformation")]
+        public async Task<IHttpActionResult> GetPersonalInfo(string userId)
+        {
+            if (userId == null)
+            {
+                return BadRequest();
+            }
+            try
+            {
+                UserPersonalInfo personalInfo = new UserPersonalInfo();
+                ApplicationUser user = await _repo.FindUserById(userId);
+                if(user == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    personalInfo.UserId = userId;
+                    personalInfo.Name = user.Name;
+                    personalInfo.UniversityName = user.UniversityName;
+                    personalInfo.MobileNumber = user.PhoneNumber;
+                    personalInfo.Specialization = user.Specialization;
+                    personalInfo.AcadamicScore = user.AcadamicScore;
+                    personalInfo.CountryCode = user.CountryCode;
+                }
+                return Ok(personalInfo);
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -43,6 +43,20 @@ namespace InterviewAcer.AuthRepository
             return result;
         }
 
+        public async Task<IdentityResult> SavePersonalInfo(UserPersonalInfo personalInfo)
+        {
+            var user = _userManager.FindById(personalInfo.UserId);
+            user.PhoneNumber = personalInfo.MobileNumber;
+            user.UniversityName = personalInfo.UniversityName;
+            user.Specialization = personalInfo.Specialization;
+            user.AcadamicScore = personalInfo.AcadamicScore;
+            user.CountryCode = personalInfo.CountryCode;
+            user.Name = personalInfo.Name;
+             var identityUser = await _userManager.UpdateAsync(user);
+            _ctx.SaveChanges();
+            return identityUser;
+        }
+
         public async Task<IdentityRole> GetRole(string Id)
         {
             return await _roleManager.FindByIdAsync(Id);
@@ -58,6 +72,12 @@ namespace InterviewAcer.AuthRepository
         public async Task<ApplicationUser> FindUser(string userName)
         {
             ApplicationUser user = await _userManager.FindByNameAsync(userName);
+            return user;
+        }
+
+        public async Task<ApplicationUser> FindUserById(string userId)
+        {
+            ApplicationUser user = await _userManager.FindByIdAsync(userId);
             return user;
         }
 

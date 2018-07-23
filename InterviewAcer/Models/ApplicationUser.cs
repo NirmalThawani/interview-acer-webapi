@@ -6,5 +6,9 @@ namespace InterviewAcer.Models
     {
         public string Name { get; set; }
         public string LicenseKey { get; set; }
+        public string UniversityName { get; set; }
+        public string CountryCode { get; set; }
+        public string Specialization { get; set; }
+        public float AcadamicScore { get; set; }
     }
 }
