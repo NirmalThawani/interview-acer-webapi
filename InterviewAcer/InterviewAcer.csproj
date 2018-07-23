@@ -263,12 +263,14 @@
     <Compile Include="AuthRepository\RegisterRoles.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\InterviewController.cs" />
+    <Compile Include="Controllers\StageController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestClasses\AddGroup.cs" />
     <Compile Include="RequestClasses\ResetPasswordRequest.cs" />
     <Compile Include="RequestClasses\UpdateCheckListRequest.cs" />
     <Compile Include="RequestClasses\VerifyOtpRequest.cs" />
@@ -296,6 +298,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Account\" />
+    <Folder Include="Views\Stage\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\InterviewAcer.Common\InterviewAcer.Common.csproj">
@@ -306,6 +309,9 @@
       <Project>{4690bc7d-4adb-44f8-a6c6-5f409cb9095a}</Project>
       <Name>InterviewAcer.Repository</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
