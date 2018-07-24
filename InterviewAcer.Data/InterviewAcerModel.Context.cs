@@ -52,5 +52,14 @@ namespace InterviewAcer.Data
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_GetCompletedStages_Result>("usp_GetCompletedStages", interviewIdParameter);
         }
+    
+        public virtual ObjectResult<Nullable<int>> usp_GetUserTotalScore(string userId)
+        {
+            var userIdParameter = userId != null ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("usp_GetUserTotalScore", userIdParameter);
+        }
     }
 }

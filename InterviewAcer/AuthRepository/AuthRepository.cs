@@ -43,6 +43,8 @@ namespace InterviewAcer.AuthRepository
             return result;
         }
 
+
+
         public async Task<IdentityResult> SavePersonalInfo(UserPersonalInfo personalInfo)
         {
             var user = _userManager.FindById(personalInfo.UserId);
@@ -53,6 +55,15 @@ namespace InterviewAcer.AuthRepository
             user.CountryCode = personalInfo.CountryCode;
             user.Name = personalInfo.Name;
              var identityUser = await _userManager.UpdateAsync(user);
+            _ctx.SaveChanges();
+            return identityUser;
+        }
+
+        public async Task<IdentityResult> SaveProfilePicture(string userId, string profilePicturePath)
+        {
+            var user = _userManager.FindById(userId);
+            user.ProfilePicture = profilePicturePath;
+            var identityUser = await _userManager.UpdateAsync(user);
             _ctx.SaveChanges();
             return identityUser;
         }

@@ -74,6 +74,9 @@
     <FunctionImport Name="usp_GetCompletedStages" ReturnType="Collection(InterviewAcerModel.usp_GetCompletedStages_Result)">
       <Parameter Name="interviewId" Mode="In" Type="Int32" />
     </FunctionImport>
+    <FunctionImport Name="usp_GetUserTotalScore" ReturnType="Collection(Int32)">
+      <Parameter Name="UserId" Mode="In" Type="String" />
+    </FunctionImport>
   </EntityContainer>
   <EntityType Name="ForgotPassword">
     <Key>

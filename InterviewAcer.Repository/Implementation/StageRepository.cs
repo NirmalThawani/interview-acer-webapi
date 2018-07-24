@@ -37,11 +37,11 @@ namespace InterviewAcer.Repository.Implementation
         {
             List<GroupDTO> groupList = new List<GroupDTO>();
             var groups = _dbContext.StageGroups.Where(x => x.StageId == stageId);
-            foreach(var grp in groups)
+            foreach (var grp in groups)
             {
                 GroupDTO grpItem = new GroupDTO();
                 grpItem.Name = grp.GroupName;
-                grpItem.GroupId= grp.Id;
+                grpItem.GroupId = grp.Id;
                 grpItem.Sequence = grp.Sequence;
                 var groupCheckList = GetCheckList(grpItem.GroupId);
                 grpItem.GroupCheckList = new List<CheckListDTO>();
@@ -128,6 +128,11 @@ namespace InterviewAcer.Repository.Implementation
             group.StageId = stageId;
             group.Sequence = maxSequene++;
             _dbContext.StageGroups.Add(group);
+        }
+
+        public int GetUserTotal(string userId)
+        {
+            return _dbContext.usp_GetUserTotalScore(userId).FirstOrDefault() ?? 0;
         }
     }
 }

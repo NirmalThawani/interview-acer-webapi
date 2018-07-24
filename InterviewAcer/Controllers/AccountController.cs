@@ -6,14 +6,22 @@ using InterviewAcer.ResponseClasses;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Configuration;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Mail;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Http;
 
 namespace InterviewAcer.Controllers
@@ -249,6 +257,8 @@ namespace InterviewAcer.Controllers
                     personalInfo.Specialization = user.Specialization;
                     personalInfo.AcadamicScore = user.AcadamicScore;
                     personalInfo.CountryCode = user.CountryCode;
+                    personalInfo.ProfileImagePath = user.ProfilePicture;
+                    personalInfo.TotalScore = _unitOfWork.GetStageRepository().GetUserTotal(userId);
                 }
                 return Ok(personalInfo);
             }
@@ -321,5 +331,158 @@ namespace InterviewAcer.Controllers
             //that the user will be sent out
             return token.ToString();
         }
+
+        [Authorize]
+        [HttpPost]
+        [Route("SaveProfilePicture")]
+        public async Task<HttpResponseMessage> SaveProfilePicture()
+        {
+            // Check if the request contains multipart/form-data.  
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+            Dictionary<string, object> dict = new Dictionary<string, object>();
+            try
+            {
+                var provider = await Request.Content.ReadAsMultipartAsync(new InMemoryMultipartFormDataStreamProvider());
+                NameValueCollection formData = provider.FormData;
+
+                string userId = string.Empty;
+                foreach(var key in formData.AllKeys)
+                {
+                    if(key.ToLower() == "userid")
+                    {
+                        userId = formData[key];
+                    }
+                }
+                if(string.IsNullOrWhiteSpace(userId))
+                {
+                    var res = string.Format("Please provide an user Id");
+                    dict.Add("error", res);
+                    return Request.CreateResponse(HttpStatusCode.NotFound, dict);
+                }
+                IList<HttpContent> files = provider.Files;
+                HttpContent file1 = files[0];
+                if (file1 != null)
+                {
+                    var fileName = file1.Headers.ContentDisposition.FileName.Trim('\"');
+                    IList<string> AllowedFileExtensions = new List<string> { ".jpg", ".gif", ".png" };
+                    var ext = fileName.Substring(fileName.LastIndexOf('.'));
+                    var extension = ext.ToLower();
+                    if (!AllowedFileExtensions.Contains(extension))
+                    {
+                        var message = string.Format("Please Upload image of type .jpg,.gif,.png.");
+                        dict.Add("error", message);
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, dict);
+                    }
+                    else
+                    {
+                        byte[] profilePicByteArray = await file1.ReadAsByteArrayAsync();
+                        switch (extension)
+                        {
+                            case ".png":
+                                using (Image image = Image.FromStream(new MemoryStream(profilePicByteArray)))
+                                {
+                                    image.Save(HttpContext.Current.Server.MapPath("~/Content/ProfilePictures/" + fileName), ImageFormat.Png);  // Or Png
+                                }
+                                break;
+                            case ".jpg":
+                                using (Image image = Image.FromStream(new MemoryStream(profilePicByteArray)))
+                                {
+                                    image.Save(HttpContext.Current.Server.MapPath("~/Content/ProfilePictures/" + fileName), ImageFormat.Jpeg);  // Or Png
+                                }
+                                break;
+                            case ".gif":
+                                using (Image image = Image.FromStream(new MemoryStream(profilePicByteArray)))
+                                {
+                                    image.Save(HttpContext.Current.Server.MapPath("~/Content/ProfilePictures/" + fileName), ImageFormat.Gif);  // Or Png
+                                }
+                                break;
+                        }
+                        IdentityResult result =  await _repo.SaveProfilePicture(userId, fileName);
+                        if(!result.Succeeded)
+                        {
+                            dict.Add("error", result.Errors.FirstOrDefault());
+                            return Request.CreateResponse(HttpStatusCode.BadRequest, dict);
+                        }
+                        else
+                        {
+                            var response = Request.CreateResponse(HttpStatusCode.OK, new { ProfileImagePath = fileName });
+                            return response;
+                        }
+                    }
+                }
+                else
+                {
+                    var res = string.Format("Please Upload a image.");
+                    dict.Add("error", res);
+                    return Request.CreateResponse(HttpStatusCode.NotFound, dict);
+                }
+            }
+            catch(Exception e)
+            {
+                dict.Add("error", e.Message);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, dict);
+            }
+        }
+
+
+        public static ImageFormat GetImageFormat(string extension)
+        {
+            ImageFormat result = null;
+            PropertyInfo prop = typeof(ImageFormat).GetProperties().Where(p => p.Name.Equals(extension, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            if (prop != null)
+            {
+                result = prop.GetValue(prop) as ImageFormat;
+            }
+            return result;
+        }
+        private MemoryStream CopyFileToMemory(string path)
+        {
+            MemoryStream ms = new MemoryStream();
+            FileStream fs = new FileStream(path, FileMode.Open);
+            fs.Position = 0;
+            fs.CopyTo(ms);
+            fs.Close();
+            fs.Dispose();
+            return ms;
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("GetProfilePicture")]
+        public HttpResponseMessage GetProfilePicture(string imagePath)
+        {
+            MemoryStream ms = null;
+            HttpContext context = HttpContext.Current;
+            string filePath = context.Server.MapPath(string.Concat("~/Content/ProfilePictures/", imagePath));
+            string extension = Path.GetExtension(imagePath);
+            if (File.Exists(filePath))
+            {
+                if (!string.IsNullOrWhiteSpace(extension))
+                {
+                    extension = extension.Substring(extension.IndexOf(".") + 1);
+                }
+
+                //If requested file is an image than load file to memory
+                if (GetImageFormat(extension) != null)
+                {
+                    ms = CopyFileToMemory(filePath);
+                }
+            }
+
+            if (ms == null)
+            {
+                extension = "png";
+                ms = CopyFileToMemory(context.Server.MapPath("~/Content/ProfilePictures/fallback.png"));
+            }
+
+            HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+            result.Content = new ByteArrayContent(ms.ToArray());
+            result.Content.Headers.ContentType = new MediaTypeHeaderValue(string.Format("image/{0}", extension));
+            return result;
+        }
+
     }
 }

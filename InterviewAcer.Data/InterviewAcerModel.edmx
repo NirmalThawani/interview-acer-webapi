@@ -147,6 +147,9 @@
         <Function Name="usp_GetCompletedStages" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="interviewId" Type="int" Mode="In" />
         </Function>
+        <Function Name="usp_GetUserTotalScore" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserId" Type="nvarchar(max)" Mode="In" />
+        </Function>
         <EntityContainer Name="InterviewAcerModelStoreContainer">
           <EntitySet Name="ForgotPassword" EntityType="Self.ForgotPassword" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GroupCheckList" EntityType="Self.GroupCheckList" Schema="dbo" store:Type="Tables" />
@@ -258,7 +261,10 @@
             <End Role="InterviewCheckListMapping" EntitySet="InterviewCheckListMappings" />
           </AssociationSet>
           <FunctionImport Name="usp_GetCompletedStages" ReturnType="Collection(InterviewAcerModel.usp_GetCompletedStages_Result)">
-            <Parameter Name="interviewId" Mode="In" Type="Int32" />
+          <Parameter Name="interviewId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetUserTotalScore" ReturnType="Collection(Int32)">
+            <Parameter Name="UserId" Mode="In" Type="String" />
           </FunctionImport>
           </EntityContainer>
         <EntityType Name="ForgotPassword">
@@ -476,6 +482,7 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetUserTotalScore" FunctionName="InterviewAcerModel.Store.usp_GetUserTotalScore" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
