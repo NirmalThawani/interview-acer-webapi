@@ -17,6 +17,11 @@ namespace InterviewAcer.AuthRepository
         {
             _ctx = new AuthContext.AuthContext();
             _userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_ctx));
+            _userManager.UserValidator = new UserValidator<ApplicationUser>(_userManager)
+            {
+                AllowOnlyAlphanumericUserNames = false,
+                RequireUniqueEmail = true
+            };
             _roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_ctx));
         }
 
@@ -30,13 +35,6 @@ namespace InterviewAcer.AuthRepository
                 EmailConfirmed = true,
                 LicenseKey = userModel.LicenseKey
             };
-
-            _userManager.UserValidator = new UserValidator<ApplicationUser>(_userManager)
-            {
-                AllowOnlyAlphanumericUserNames = false,
-                RequireUniqueEmail = true
-            };
-
 
             var result = await _userManager.CreateAsync(user, userModel.Password);
 
