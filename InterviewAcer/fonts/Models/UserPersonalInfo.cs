@@ -17,7 +17,7 @@ namespace InterviewAcer.Models
         public string UniversityName { get; set; }
         public string CountryCode { get; set; }
         public string Specialization { get; set; }
-        public float AcadamicScore { get; set; }
+        public string AcadamicScore { get; set; }
         public string MobileNumber { get; set; }
         public int TotalScore { get; set; }
         public string ProfileImagePath { get; set; }
