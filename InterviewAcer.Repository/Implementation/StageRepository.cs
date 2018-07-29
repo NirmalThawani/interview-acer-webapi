@@ -50,18 +50,29 @@ namespace InterviewAcer.Repository.Implementation
                     CheckListDTO checkListItem = new CheckListDTO();
                     checkListItem.CheckListId = checkList.Id;
                     checkListItem.Name = checkList.Name;
-                    checkListItem.Points = checkList.Points;
-                    //if (checkListItem.IsChecked)
-                    //{
-                    //    totalStageScore = totalStageScore + checkList.Points;
-                    //    completedCheckListCount++;
-                    //}
-                    //totalCheckListCount++;
+                    checkListItem.Points = checkList.Points;                 
                     grpItem.GroupCheckList.Add(checkListItem);
                 }
                 groupList.Add(grpItem);
             }
             return groupList;
+        }
+
+        public List<CheckListDTO> GetCheckListDTOList(int groupId)
+        {
+            var CheckListDataList =  GetCheckList(groupId);
+            List<CheckListDTO> checkListDTOList = new List<CheckListDTO>();
+            foreach(var checkListItem in CheckListDataList)
+            {
+                var checkListDTOItem = new CheckListDTO()
+                {
+                    Name = checkListItem.Name,
+                    CheckListId = checkListItem.Id,
+                    Points = checkListItem.Points
+                };
+                checkListDTOList.Add(checkListDTOItem);
+            }
+            return checkListDTOList;
         }
 
         public IQueryable<GroupCheckList> GetCheckList(int grouId)
@@ -134,5 +145,36 @@ namespace InterviewAcer.Repository.Implementation
         {
             return _dbContext.usp_GetUserTotalScore(userId).FirstOrDefault() ?? 0;
         }
+
+        public bool IsCheckListExists(int checkListId, int groupId)
+        {
+            return _dbContext.GroupCheckLists.Any(x => x.Id == checkListId && x.GroupId == groupId);
+        }
+
+        public bool IsGroupExists(int groupId)
+        {
+            return _dbContext.GroupCheckLists.Any(x => x.Id == groupId);
+        }
+
+        public void AddCheckList(string checkListDescription, int checkListPoints, int GroupId)
+        {
+            GroupCheckList checkListItem = new GroupCheckList();
+            checkListItem.GroupId = GroupId;
+            checkListItem.Name = checkListDescription;
+            checkListItem.Points = checkListPoints;
+            _dbContext.GroupCheckLists.Add(checkListItem);
+        }
+
+        public void UpdateCheckList(int checkListId, string checkListDescription, int checkListPoints, int GroupId)
+        {
+            GroupCheckList checkListItem = _dbContext.GroupCheckLists.FirstOrDefault(x => x.Id == checkListId);
+            if(checkListItem != null)
+            {
+                checkListItem.GroupId = GroupId;
+                checkListItem.Name = checkListDescription;
+                checkListItem.Points = checkListPoints;
+            }
+        }
+
     }
 }

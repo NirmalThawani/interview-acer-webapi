@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.Linq;
 using InterviewAcer.RequestClasses;
 using InterviewAcer.ResponseClasses;
+using System.Collections.Generic;
 
 namespace InterviewAcer.Controllers
 {
@@ -65,6 +66,29 @@ namespace InterviewAcer.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrator")]
+        [Route("api/GetCheckList")]
+        [HttpGet]
+        public IHttpActionResult GetCheckList(int groupId)
+        {
+            try
+            {
+                var checkListDTOList = _unitOfWork.GetStageRepository().GetCheckListDTOList(groupId);
+                if (checkListDTOList != null && checkListDTOList.Any())
+                {
+                    return Ok(checkListDTOList);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+
         [Route("api/AddGroup")]
         [Authorize(Roles ="Administrator")]
         [HttpPost]
@@ -75,6 +99,52 @@ namespace InterviewAcer.Controllers
                 _unitOfWork.GetStageRepository().AddGroup(groupDetails.GroupName, groupDetails.StageId);
                 await _unitOfWork.Save();
                 return Ok();
+            }
+            catch(Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+
+        [Route("api/AddUpdateCheckList")]
+        [Authorize(Roles = "Administrator")]
+        [HttpPost]
+        public async Task<IHttpActionResult> AddUpdateCheckList(List<AddUpdateCheckList> checkListDetails)
+        {
+            bool someRecordsAreNotValid = true;
+            try
+            {
+                foreach (var checkListItem in checkListDetails)
+                {
+                    if (_unitOfWork.GetStageRepository().IsGroupExists(checkListItem.GroupId))
+                    {
+                        if (checkListItem.CheckListId > 0)
+                        {
+                            bool IsCheckListExists = _unitOfWork.GetStageRepository().IsCheckListExists(checkListItem.CheckListId, checkListItem.GroupId);
+                            if (IsCheckListExists)
+                            {
+                                _unitOfWork.GetStageRepository().UpdateCheckList(checkListItem.CheckListId, checkListItem.CheckListDescription, checkListItem.CheckListScore, checkListItem.GroupId);
+                                await _unitOfWork.Save();
+                                someRecordsAreNotValid = false;
+                            }
+                          
+                        }
+                        else
+                        {
+                            _unitOfWork.GetStageRepository().AddCheckList(checkListItem.CheckListDescription, checkListItem.CheckListScore, checkListItem.GroupId);
+                            await _unitOfWork.Save();
+                            someRecordsAreNotValid = false;
+                        }
+                    }
+                }
+                if(someRecordsAreNotValid)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok();
+                }
             }
             catch(Exception e)
             {
