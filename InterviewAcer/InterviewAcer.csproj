@@ -277,6 +277,7 @@
     <Compile Include="RequestClasses\AddUpdateCheckList.cs" />
     <Compile Include="RequestClasses\ResetPasswordRequest.cs" />
     <Compile Include="RequestClasses\UpdateCheckListRequest.cs" />
+    <Compile Include="RequestClasses\UpdateGroupName.cs" />
     <Compile Include="RequestClasses\VerifyOtpRequest.cs" />
     <Compile Include="ResponseClasses\ErrorResponse.cs" />
     <Compile Include="ResponseClasses\UserIdResponse.cs" />

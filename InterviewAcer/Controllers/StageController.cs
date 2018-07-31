@@ -151,5 +151,27 @@ namespace InterviewAcer.Controllers
                 return InternalServerError(e);
             }
         }
+
+        [Route("api/UpdateGroupName")]
+        [Authorize(Roles = "Administrator")]
+        [HttpPost]
+        public async Task<IHttpActionResult> UpdateGroupName(UpdateGroupName updateGroupName)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                _unitOfWork.GetStageRepository().UpdateGroupName(updateGroupName.GroupId, updateGroupName.GroupName);
+                await _unitOfWork.Save();
+                return Ok();
+            }
+            catch(Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
     }
 }

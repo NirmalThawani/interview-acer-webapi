@@ -176,5 +176,14 @@ namespace InterviewAcer.Repository.Implementation
             }
         }
 
+        public void UpdateGroupName(int groupId, string groupName)
+        {
+            var group = _dbContext.StageGroups.First(x => x.Id == groupId);
+            if(group != null)
+            {
+                group.GroupName = groupName;
+            }
+        }
+
     }
 }
