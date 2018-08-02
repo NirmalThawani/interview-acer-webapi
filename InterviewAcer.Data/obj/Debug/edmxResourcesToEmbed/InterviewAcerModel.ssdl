@@ -26,6 +26,14 @@
     <Property Name="InterviewId" Type="int" Nullable="false" />
     <Property Name="CheckListId" Type="int" Nullable="false" />
   </EntityType>
+  <EntityType Name="InterviewCompletedStageMapping">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="InterviewId" Type="int" Nullable="false" />
+    <Property Name="StageId" Type="int" Nullable="false" />
+  </EntityType>
   <EntityType Name="InterviewDetails">
     <Key>
       <PropertyRef Name="InterviewDetailId" />
@@ -100,6 +108,30 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_InterviewCompletedStageMapping_InterviewDetails">
+    <End Role="InterviewDetails" Type="Self.InterviewDetails" Multiplicity="1" />
+    <End Role="InterviewCompletedStageMapping" Type="Self.InterviewCompletedStageMapping" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="InterviewDetails">
+        <PropertyRef Name="InterviewDetailId" />
+      </Principal>
+      <Dependent Role="InterviewCompletedStageMapping">
+        <PropertyRef Name="InterviewId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_InterviewCompletedStageMapping_Stages">
+    <End Role="Stages" Type="Self.Stages" Multiplicity="1" />
+    <End Role="InterviewCompletedStageMapping" Type="Self.InterviewCompletedStageMapping" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Stages">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="InterviewCompletedStageMapping">
+        <PropertyRef Name="StageId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_InterviewDetails_InterviewTypes">
     <End Role="InterviewTypes" Type="Self.InterviewTypes" Multiplicity="1" />
     <End Role="InterviewDetails" Type="Self.InterviewDetails" Multiplicity="*" />
@@ -139,16 +171,18 @@
   <Function Name="GetInterviewStage" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="InterviewId" Type="int" Mode="In" />
   </Function>
-  <Function Name="usp_GetCompletedStages" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-    <Parameter Name="interviewId" Type="int" Mode="In" />
-  </Function>
   <Function Name="usp_GetUserTotalScore" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="UserId" Type="nvarchar(max)" Mode="In" />
+  </Function>
+  <Function Name="usp_UpdateCheckList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="checklistId" Type="int" Mode="In" />
+    <Parameter Name="interviewId" Type="int" Mode="In" />
   </Function>
   <EntityContainer Name="InterviewAcerModelStoreContainer">
     <EntitySet Name="ForgotPassword" EntityType="Self.ForgotPassword" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="GroupCheckList" EntityType="Self.GroupCheckList" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="InterviewCheckListMapping" EntityType="Self.InterviewCheckListMapping" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="InterviewCompletedStageMapping" EntityType="Self.InterviewCompletedStageMapping" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="InterviewDetails" EntityType="Self.InterviewDetails" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="InterviewTypes" EntityType="Self.InterviewTypes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="StageGroups" EntityType="Self.StageGroups" Schema="dbo" store:Type="Tables" />
@@ -164,6 +198,14 @@
     <AssociationSet Name="FK_InterviewCheckListMapping_InterviewDetails" Association="Self.FK_InterviewCheckListMapping_InterviewDetails">
       <End Role="InterviewDetails" EntitySet="InterviewDetails" />
       <End Role="InterviewCheckListMapping" EntitySet="InterviewCheckListMapping" />
+    </AssociationSet>
+    <AssociationSet Name="FK_InterviewCompletedStageMapping_InterviewDetails" Association="Self.FK_InterviewCompletedStageMapping_InterviewDetails">
+      <End Role="InterviewDetails" EntitySet="InterviewDetails" />
+      <End Role="InterviewCompletedStageMapping" EntitySet="InterviewCompletedStageMapping" />
+    </AssociationSet>
+    <AssociationSet Name="FK_InterviewCompletedStageMapping_Stages" Association="Self.FK_InterviewCompletedStageMapping_Stages">
+      <End Role="Stages" EntitySet="Stages" />
+      <End Role="InterviewCompletedStageMapping" EntitySet="InterviewCompletedStageMapping" />
     </AssociationSet>
     <AssociationSet Name="FK_InterviewDetails_InterviewTypes" Association="Self.FK_InterviewDetails_InterviewTypes">
       <End Role="InterviewTypes" EntitySet="InterviewTypes" />

@@ -78,6 +78,9 @@
     <Compile Include="InterviewCheckListMapping.cs">
       <DependentUpon>InterviewAcerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="InterviewCompletedStageMapping.cs">
+      <DependentUpon>InterviewAcerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="InterviewDetail.cs">
       <DependentUpon>InterviewAcerModel.tt</DependentUpon>
     </Compile>

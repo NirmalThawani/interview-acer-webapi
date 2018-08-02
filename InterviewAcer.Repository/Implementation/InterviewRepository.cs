@@ -34,13 +34,13 @@ namespace InterviewAcer.Repository.Implementation
                 if (stages != null && stages.Any())
                 {
                     interviewDetailItem.TotalNumberOfStages = stages.Count();
-                    List<usp_GetCompletedStages_Result> completedStages =  _dbContext.usp_GetCompletedStages(interviewDetailItem.InterviewId).ToList();
-                    if(completedStages != null)
-                    interviewDetailItem.CompletedNumberOfStages = completedStages.Count();
+                    interviewDetailItem.CompletedNumberOfStages = _dbContext.InterviewCompletedStageMappings.Count(x => x.InterviewId == interviewDetailItem.InterviewId);
+                    //if (completedStages != null)
+                    //    interviewDetailItem.CompletedNumberOfStages = completedStages.Count();
                 }
                 else
                     interviewDetailItem.TotalNumberOfStages = 0;
-                
+
                 GetInterviewStage_Result stageDetails = _dbContext.GetInterviewStage(item.InterviewDetailId).FirstOrDefault();
                 if (stageDetails != null)
                 {
@@ -73,6 +73,14 @@ namespace InterviewAcer.Repository.Implementation
             //return checkListIdList;
         }
 
+        public IQueryable<int> GetCompletedStages(int interviewId)
+        {
+            //List<int> checkListIdList = new List<int>();
+            //checkListIdList = await _dbContext.InterviewCheckListMappings.Where(x => x.InterviewId == interviewId).Select(x => x.CheckListId).ToListAsync(); 
+            return _dbContext.InterviewCompletedStageMappings.Where(x => x.InterviewId == interviewId).Select(x => x.StageId);
+            //return checkListIdList;
+        }
+
         public bool updateCheckList(int interviewId, int checkListId, bool isChecked)
         {
             bool checkListUpdate = false;
@@ -80,20 +88,7 @@ namespace InterviewAcer.Repository.Implementation
             var interviewItem = _dbContext.InterviewDetails.First(x => x.InterviewDetailId == interviewId);
             if (checkListItem != null && interviewItem != null)
             {
-                InterviewCheckListMapping mappingObject = new InterviewCheckListMapping()
-                {
-                    InterviewId = interviewId,
-                    CheckListId = checkListId
-                };
-                if (isChecked)
-                {
-                    if(!_dbContext.InterviewCheckListMappings.Where(x => x.CheckListId == checkListId && x.InterviewId == interviewId).Any())
-                            _dbContext.InterviewCheckListMappings.Add(mappingObject);
-                }
-                else
-                {
-                    _dbContext.InterviewCheckListMappings.Remove(mappingObject);
-                }
+                _dbContext.usp_UpdateCheckList(checkListId, interviewId);
                 checkListUpdate = true;
             }
             return checkListUpdate;
@@ -102,10 +97,19 @@ namespace InterviewAcer.Repository.Implementation
         public InterviewCurrentStatusDTO GetInterviewCurrentStatus(int interviewId)
         {
             InterviewCurrentStatusDTO interviewStatus = new InterviewCurrentStatusDTO();
-            var status =  _dbContext.GetInterviewStage(interviewId).First();
+            var status = _dbContext.GetInterviewStage(interviewId).First();
             interviewStatus.CurrentStatusId = status.Id;
             interviewStatus.CurrentStatusName = status.StageName;
             return interviewStatus;
+        }
+
+        public void MarkStageAsComplete(int stageId, int interviewId)
+        {
+            var isCompleted = _dbContext.InterviewCompletedStageMappings.FirstOrDefault(x => x.InterviewId == interviewId && x.StageId == stageId);
+            if(isCompleted ==  null)
+            {
+                _dbContext.InterviewCompletedStageMappings.Add(new InterviewCompletedStageMapping() { InterviewId = interviewId, StageId = stageId });
+            }
         }
     }
 }

@@ -80,7 +80,7 @@ namespace InterviewAcer.Repository.Implementation
             return _dbContext.GroupCheckLists.Where(x => x.GroupId == grouId);
         }
 
-        public List<StageDTO> GetAllStageData(int interviewType, IQueryable<int> completedCheckList)
+        public List<StageDTO> GetAllStageData(int interviewType, IQueryable<int> completedCheckList, IQueryable<int> completedStagesList)
         {
             int totalStageScore;
             int totalCheckListCount;
@@ -96,6 +96,7 @@ namespace InterviewAcer.Repository.Implementation
                 stageDetailItem.Name = stage.StageName;
                 stageDetailItem.StageId = stage.Id;
                 stageDetailItem.Sequence = stage.Sequence;
+                stageDetailItem.IsCompleted = completedStagesList.Any(x => x == stageDetailItem.StageId);
                 var stageGroups = _dbContext.StageGroups.Where(x => x.StageId == stageDetailItem.StageId);
                 stageDetailItem.StageGroups = new List<GroupDTO>();
                 foreach (var group in stageGroups)

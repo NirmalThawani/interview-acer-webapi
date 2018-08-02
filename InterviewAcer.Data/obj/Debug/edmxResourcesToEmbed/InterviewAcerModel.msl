@@ -81,13 +81,16 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <FunctionImportMapping FunctionImportName="usp_GetCompletedStages" FunctionName="InterviewAcerModel.Store.usp_GetCompletedStages">
-      <ResultMapping>
-        <ComplexTypeMapping TypeName="InterviewAcerModel.usp_GetCompletedStages_Result">
-          <ScalarProperty Name="StageId" ColumnName="StageId" />
-        </ComplexTypeMapping>
-      </ResultMapping>
-    </FunctionImportMapping>
     <FunctionImportMapping FunctionImportName="usp_GetUserTotalScore" FunctionName="InterviewAcerModel.Store.usp_GetUserTotalScore" />
+    <EntitySetMapping Name="InterviewCompletedStageMappings">
+      <EntityTypeMapping TypeName="InterviewAcerModel.InterviewCompletedStageMapping">
+        <MappingFragment StoreEntitySet="InterviewCompletedStageMapping">
+          <ScalarProperty Name="StageId" ColumnName="StageId" />
+          <ScalarProperty Name="InterviewId" ColumnName="InterviewId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="usp_UpdateCheckList" FunctionName="InterviewAcerModel.Store.usp_UpdateCheckList" />
   </EntityContainerMapping>
 </Mapping>

@@ -57,6 +57,45 @@ namespace InterviewAcer.AuthRepository
             return identityUser;
         }
 
+        //public async Task<IdentityResult> ChangeEmailAddress(string email, string userId)
+        //{
+        //    try
+        //    {
+        //        var user = _userManager.FindById(userId);
+        //        user.Email = email;
+        //        user.UserName = email;
+        //        var identityUser = await _userManager.UpdateAsync(user);
+        //        _ctx.SaveChanges();
+        //        return identityUser;
+        //    }
+        //    catch(Exception e)
+        //    {
+        //        throw e;
+        //    }
+
+        //}
+
+        public async Task<bool> ChangeEmailAddress(string email, string userId)
+        {
+            try
+            {
+                var user = _userManager.FindById(userId);
+                user.Email = email;
+                user.UserName = email;
+                var identityUser = await _userManager.UpdateAsync(user);
+                _ctx.SaveChanges();
+                if (identityUser.Succeeded)
+                    return true;
+                else
+                    return false;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+        }
+
         public async Task<IdentityResult> SaveProfilePicture(string userId, string profilePicturePath)
         {
             var user = _userManager.FindById(userId);

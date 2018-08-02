@@ -231,6 +231,22 @@ namespace InterviewAcer.Controllers
             }
         }
 
+        [Route("UpdateEmailAddress")]
+        [HttpGet]
+        public async Task<IHttpActionResult> UpdateEmailAddress(string emailAddress, string userId)
+        {
+            var isSuccess = await _repo.ChangeEmailAddress(emailAddress, userId);
+            if(isSuccess)
+            {
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
+            //return Ok();
+        }
+
         [Authorize]
         [HttpGet]
         [Route("GetUserPeronalInformation")]

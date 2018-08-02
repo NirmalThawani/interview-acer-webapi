@@ -34,6 +34,8 @@ namespace InterviewAcer.Data
         public virtual DbSet<StageGroup> StageGroups { get; set; }
         public virtual DbSet<Stage> Stages { get; set; }
         public virtual DbSet<InterviewCheckListMapping> InterviewCheckListMappings { get; set; }
+        public virtual DbSet<InterviewCompletedStageMapping> InterviewCompletedStageMappings { get; set; }
+        public virtual DbSet<InterviewStageFeedback> InterviewStageFeedbacks { get; set; }
     
         public virtual ObjectResult<GetInterviewStage_Result> GetInterviewStage(Nullable<int> interviewId)
         {
@@ -60,6 +62,19 @@ namespace InterviewAcer.Data
                 new ObjectParameter("UserId", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("usp_GetUserTotalScore", userIdParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> usp_UpdateCheckList(Nullable<int> checklistId, Nullable<int> interviewId)
+        {
+            var checklistIdParameter = checklistId.HasValue ?
+                new ObjectParameter("checklistId", checklistId) :
+                new ObjectParameter("checklistId", typeof(int));
+    
+            var interviewIdParameter = interviewId.HasValue ?
+                new ObjectParameter("interviewId", interviewId) :
+                new ObjectParameter("interviewId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("usp_UpdateCheckList", checklistIdParameter, interviewIdParameter);
         }
     }
 }

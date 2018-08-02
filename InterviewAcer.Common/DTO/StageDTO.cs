@@ -11,5 +11,6 @@ namespace InterviewAcer.Common.DTO
         public int StageScore { get; set; }
         public int CompletedCheckListCount { get; set; }
         public int TotalCheckListCount { get; set; }
+        public bool IsCompleted { get; set; }
     }
 }

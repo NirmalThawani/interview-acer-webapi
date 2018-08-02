@@ -18,6 +18,8 @@ namespace InterviewAcer.Data
         public Stage()
         {
             this.StageGroups = new HashSet<StageGroup>();
+            this.InterviewCompletedStageMappings = new HashSet<InterviewCompletedStageMapping>();
+            this.InterviewStageFeedbacks = new HashSet<InterviewStageFeedback>();
         }
     
         public int Id { get; set; }
@@ -28,5 +30,9 @@ namespace InterviewAcer.Data
         public virtual InterviewType InterviewType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<StageGroup> StageGroups { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<InterviewCompletedStageMapping> InterviewCompletedStageMappings { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<InterviewStageFeedback> InterviewStageFeedbacks { get; set; }
     }
 }

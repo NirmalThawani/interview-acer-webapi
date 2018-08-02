@@ -95,12 +95,13 @@ namespace InterviewAcer.Controllers
         {
             try
             {
-                if(interviewType == 0)
+                if (interviewType == 0)
                 {
                     return BadRequest();
                 }
                 var completedCheckList = _unitOfWork.GetInterviewRepository().GetCompletedCheckList(interviewId);
-                var stages = _unitOfWork.GetStageRepository().GetAllStageData(interviewType, completedCheckList);
+                var completedStageList = _unitOfWork.GetInterviewRepository().GetCompletedStages(interviewId);
+                var stages = _unitOfWork.GetStageRepository().GetAllStageData(interviewType, completedCheckList, completedStageList);
                 if (stages == null || stages.Count == 0)
                 {
                     return NotFound();
@@ -153,7 +154,7 @@ namespace InterviewAcer.Controllers
         [Route("api/UpdateCheckList")]
         public async Task<IHttpActionResult> UpdateCheckList(UpdateCheckListRequest updateCheckList)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
@@ -177,6 +178,29 @@ namespace InterviewAcer.Controllers
                 return InternalServerError(e);
             }
 
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("api/MarkStageAsComplete")]
+        public async Task<IHttpActionResult> MarkStageAsComplete(MarkStageAsCompleteRequest markStageComplete)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            try
+            {
+                _unitOfWork.GetInterviewRepository().MarkStageAsComplete(markStageComplete.StageId, markStageComplete.InterviewId);
+                await _unitOfWork.Save();
+                var status = _unitOfWork.GetInterviewRepository().GetInterviewCurrentStatus(markStageComplete.InterviewId);
+                return Ok(status);
+
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
         }
     }
 }

@@ -14,6 +14,7 @@
     <NavigationProperty Name="InterviewType" Relationship="Self.FK_InterviewDetails_InterviewTypes" FromRole="InterviewDetails" ToRole="InterviewTypes" />
     <Property Name="ColorCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <NavigationProperty Name="InterviewCheckListMappings" Relationship="InterviewAcerModel.FK_InterviewCheckListMapping_InterviewDetails" FromRole="InterviewDetail" ToRole="InterviewCheckListMapping" />
+    <NavigationProperty Name="InterviewCompletedStageMappings" Relationship="InterviewAcerModel.FK_InterviewCompletedStageMapping_InterviewDetails" FromRole="InterviewDetail" ToRole="InterviewCompletedStageMapping" />
   </EntityType>
   <EntityType Name="InterviewType">
     <Key>
@@ -77,6 +78,19 @@
     <FunctionImport Name="usp_GetUserTotalScore" ReturnType="Collection(Int32)">
       <Parameter Name="UserId" Mode="In" Type="String" />
     </FunctionImport>
+    <EntitySet Name="InterviewCompletedStageMappings" EntityType="InterviewAcerModel.InterviewCompletedStageMapping" />
+    <AssociationSet Name="FK_InterviewCompletedStageMapping_InterviewDetails" Association="InterviewAcerModel.FK_InterviewCompletedStageMapping_InterviewDetails">
+      <End Role="InterviewDetail" EntitySet="InterviewDetails" />
+      <End Role="InterviewCompletedStageMapping" EntitySet="InterviewCompletedStageMappings" />
+    </AssociationSet>
+    <AssociationSet Name="FK_InterviewCompletedStageMapping_Stages" Association="InterviewAcerModel.FK_InterviewCompletedStageMapping_Stages">
+      <End Role="Stage" EntitySet="Stages" />
+      <End Role="InterviewCompletedStageMapping" EntitySet="InterviewCompletedStageMappings" />
+    </AssociationSet>
+    <FunctionImport Name="usp_UpdateCheckList" ReturnType="Collection(Int32)">
+      <Parameter Name="checklistId" Mode="In" Type="Int32" />
+      <Parameter Name="interviewId" Mode="In" Type="Int32" />
+    </FunctionImport>
   </EntityContainer>
   <EntityType Name="ForgotPassword">
     <Key>
@@ -119,6 +133,7 @@
     <Property Name="Sequence" Type="Int32" Nullable="false" />
     <NavigationProperty Name="InterviewType" Relationship="InterviewAcerModel.FK_Stages_InterviewTypes" FromRole="Stage" ToRole="InterviewType" />
     <NavigationProperty Name="StageGroups" Relationship="InterviewAcerModel.FK_StageGroups_Stages" FromRole="Stage" ToRole="StageGroup" />
+    <NavigationProperty Name="InterviewCompletedStageMappings" Relationship="InterviewAcerModel.FK_InterviewCompletedStageMapping_Stages" FromRole="Stage" ToRole="InterviewCompletedStageMapping" />
   </EntityType>
   <Association Name="FK_GroupCheckList_StageGroups">
     <End Type="InterviewAcerModel.StageGroup" Role="StageGroup" Multiplicity="1" />
@@ -198,4 +213,38 @@
   <ComplexType Name="usp_GetCompletedStages_Result">
     <Property Type="Int32" Name="StageId" Nullable="false" />
   </ComplexType>
+  <EntityType Name="InterviewCompletedStageMapping">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="InterviewId" Type="Int32" Nullable="false" />
+    <Property Name="StageId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="InterviewDetail" Relationship="InterviewAcerModel.FK_InterviewCompletedStageMapping_InterviewDetails" FromRole="InterviewCompletedStageMapping" ToRole="InterviewDetail" />
+    <NavigationProperty Name="Stage" Relationship="InterviewAcerModel.FK_InterviewCompletedStageMapping_Stages" FromRole="InterviewCompletedStageMapping" ToRole="Stage" />
+  </EntityType>
+  <Association Name="FK_InterviewCompletedStageMapping_InterviewDetails">
+    <End Type="InterviewAcerModel.InterviewDetail" Role="InterviewDetail" Multiplicity="1" />
+    <End Type="InterviewAcerModel.InterviewCompletedStageMapping" Role="InterviewCompletedStageMapping" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="InterviewDetail">
+        <PropertyRef Name="InterviewDetailId" />
+      </Principal>
+      <Dependent Role="InterviewCompletedStageMapping">
+        <PropertyRef Name="InterviewId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_InterviewCompletedStageMapping_Stages">
+    <End Type="InterviewAcerModel.Stage" Role="Stage" Multiplicity="1" />
+    <End Type="InterviewAcerModel.InterviewCompletedStageMapping" Role="InterviewCompletedStageMapping" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Stage">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="InterviewCompletedStageMapping">
+        <PropertyRef Name="StageId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>

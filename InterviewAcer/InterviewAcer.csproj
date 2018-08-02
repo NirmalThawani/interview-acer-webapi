@@ -275,6 +275,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestClasses\AddGroup.cs" />
     <Compile Include="RequestClasses\AddUpdateCheckList.cs" />
+    <Compile Include="RequestClasses\MarkStageAsCompleteRequest.cs" />
     <Compile Include="RequestClasses\ResetPasswordRequest.cs" />
     <Compile Include="RequestClasses\UpdateCheckListRequest.cs" />
     <Compile Include="RequestClasses\UpdateGroupName.cs" />
