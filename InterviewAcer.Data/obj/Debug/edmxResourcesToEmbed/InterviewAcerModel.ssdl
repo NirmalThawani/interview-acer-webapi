@@ -33,6 +33,7 @@
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="InterviewId" Type="int" Nullable="false" />
     <Property Name="StageId" Type="int" Nullable="false" />
+    <Property Name="FeedBack" Type="nvarchar(max)" />
   </EntityType>
   <EntityType Name="InterviewDetails">
     <Key>

@@ -52,7 +52,7 @@ namespace InterviewAcer.Repository.Implementation
             return interviewDetailsList;
         }
 
-        public void SaveInterviewDetails(InterviewDetailsDTO interviewDetails, string userName)
+        public InterviewDetail SaveInterviewDetails(InterviewDetailsDTO interviewDetails, string userName)
         {
             var interviewDetailEntity = new InterviewDetail();
             interviewDetailEntity.CompanyName = interviewDetails.CompanyName;
@@ -62,7 +62,7 @@ namespace InterviewAcer.Repository.Implementation
             interviewDetailEntity.InterviewTypeId = interviewDetails.InterviewTypeId;
             interviewDetailEntity.UserName = userName;
             interviewDetailEntity.ColorCode = interviewDetails.Tag;
-            _dbContext.InterviewDetails.Add(interviewDetailEntity);
+            return _dbContext.InterviewDetails.Add(interviewDetailEntity);
         }
 
         public IQueryable<int> GetCompletedCheckList(int interviewId)

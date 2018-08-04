@@ -38,6 +38,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="InterviewId" Type="int" Nullable="false" />
           <Property Name="StageId" Type="int" Nullable="false" />
+          <Property Name="FeedBack" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="InterviewDetails">
           <Key>
@@ -51,15 +52,6 @@
           <Property Name="HiringIndividualName" Type="nvarchar(max)" />
           <Property Name="UserName" Type="nvarchar(max)" Nullable="false" />
           <Property Name="ColorCode" Type="nvarchar(max)" />
-        </EntityType>
-        <EntityType Name="InterviewStageFeedback">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="InterviewId" Type="int" Nullable="false" />
-          <Property Name="StageId" Type="int" Nullable="false" />
-          <Property Name="Feedback" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
         <EntityType Name="InterviewTypes">
           <Key>
@@ -158,30 +150,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_InterviewStageFeedback_InterviewDetails">
-          <End Role="InterviewDetails" Type="Self.InterviewDetails" Multiplicity="1" />
-          <End Role="InterviewStageFeedback" Type="Self.InterviewStageFeedback" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="InterviewDetails">
-              <PropertyRef Name="InterviewDetailId" />
-            </Principal>
-            <Dependent Role="InterviewStageFeedback">
-              <PropertyRef Name="InterviewId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_InterviewStageFeedback_Stages">
-          <End Role="Stages" Type="Self.Stages" Multiplicity="1" />
-          <End Role="InterviewStageFeedback" Type="Self.InterviewStageFeedback" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Stages">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="InterviewStageFeedback">
-              <PropertyRef Name="StageId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_StageGroups_Stages">
           <End Role="Stages" Type="Self.Stages" Multiplicity="1" />
           <End Role="StageGroups" Type="Self.StageGroups" Multiplicity="*" />
@@ -222,7 +190,6 @@
           <EntitySet Name="InterviewCheckListMapping" EntityType="Self.InterviewCheckListMapping" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InterviewCompletedStageMapping" EntityType="Self.InterviewCompletedStageMapping" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InterviewDetails" EntityType="Self.InterviewDetails" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="InterviewStageFeedback" EntityType="Self.InterviewStageFeedback" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InterviewTypes" EntityType="Self.InterviewTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StageGroups" EntityType="Self.StageGroups" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Stages" EntityType="Self.Stages" Schema="dbo" store:Type="Tables" />
@@ -249,14 +216,6 @@
           <AssociationSet Name="FK_InterviewDetails_InterviewTypes" Association="Self.FK_InterviewDetails_InterviewTypes">
             <End Role="InterviewTypes" EntitySet="InterviewTypes" />
             <End Role="InterviewDetails" EntitySet="InterviewDetails" />
-          </AssociationSet>
-          <AssociationSet Name="FK_InterviewStageFeedback_InterviewDetails" Association="Self.FK_InterviewStageFeedback_InterviewDetails">
-            <End Role="InterviewDetails" EntitySet="InterviewDetails" />
-            <End Role="InterviewStageFeedback" EntitySet="InterviewStageFeedback" />
-          </AssociationSet>
-          <AssociationSet Name="FK_InterviewStageFeedback_Stages" Association="Self.FK_InterviewStageFeedback_Stages">
-            <End Role="Stages" EntitySet="Stages" />
-            <End Role="InterviewStageFeedback" EntitySet="InterviewStageFeedback" />
           </AssociationSet>
           <AssociationSet Name="FK_StageGroups_Stages" Association="Self.FK_StageGroups_Stages">
             <End Role="Stages" EntitySet="Stages" />
@@ -286,7 +245,6 @@
           <Property Name="ColorCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="InterviewCheckListMappings" Relationship="InterviewAcerModel.FK_InterviewCheckListMapping_InterviewDetails" FromRole="InterviewDetail" ToRole="InterviewCheckListMapping" />
           <NavigationProperty Name="InterviewCompletedStageMappings" Relationship="InterviewAcerModel.FK_InterviewCompletedStageMapping_InterviewDetails" FromRole="InterviewDetail" ToRole="InterviewCompletedStageMapping" />
-          <NavigationProperty Name="InterviewStageFeedbacks" Relationship="InterviewAcerModel.FK_InterviewStageFeedback_InterviewDetails" FromRole="InterviewDetail" ToRole="InterviewStageFeedback" />
           
         </EntityType>
         <EntityType Name="InterviewType">
@@ -365,15 +323,6 @@
             <Parameter Name="checklistId" Mode="In" Type="Int32" />
             <Parameter Name="interviewId" Mode="In" Type="Int32" />
           </FunctionImport>
-          <EntitySet Name="InterviewStageFeedbacks" EntityType="InterviewAcerModel.InterviewStageFeedback" />
-          <AssociationSet Name="FK_InterviewStageFeedback_InterviewDetails" Association="InterviewAcerModel.FK_InterviewStageFeedback_InterviewDetails">
-            <End Role="InterviewDetail" EntitySet="InterviewDetails" />
-            <End Role="InterviewStageFeedback" EntitySet="InterviewStageFeedbacks" />
-          </AssociationSet>
-          <AssociationSet Name="FK_InterviewStageFeedback_Stages" Association="InterviewAcerModel.FK_InterviewStageFeedback_Stages">
-            <End Role="Stage" EntitySet="Stages" />
-            <End Role="InterviewStageFeedback" EntitySet="InterviewStageFeedbacks" />
-          </AssociationSet>
           </EntityContainer>
         <EntityType Name="ForgotPassword">
           <Key>
@@ -418,7 +367,6 @@
           <NavigationProperty Name="InterviewType" Relationship="InterviewAcerModel.FK_Stages_InterviewTypes" FromRole="Stage" ToRole="InterviewType" />
           <NavigationProperty Name="StageGroups" Relationship="InterviewAcerModel.FK_StageGroups_Stages" FromRole="Stage" ToRole="StageGroup" />          
           <NavigationProperty Name="InterviewCompletedStageMappings" Relationship="InterviewAcerModel.FK_InterviewCompletedStageMapping_Stages" FromRole="Stage" ToRole="InterviewCompletedStageMapping" />
-          <NavigationProperty Name="InterviewStageFeedbacks" Relationship="InterviewAcerModel.FK_InterviewStageFeedback_Stages" FromRole="Stage" ToRole="InterviewStageFeedback" />
         </EntityType>
         <Association Name="FK_GroupCheckList_StageGroups">
           <End Type="InterviewAcerModel.StageGroup" Role="StageGroup" Multiplicity="1" />
@@ -508,6 +456,7 @@
           <Property Name="StageId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="InterviewDetail" Relationship="InterviewAcerModel.FK_InterviewCompletedStageMapping_InterviewDetails" FromRole="InterviewCompletedStageMapping" ToRole="InterviewDetail" />
           <NavigationProperty Name="Stage" Relationship="InterviewAcerModel.FK_InterviewCompletedStageMapping_Stages" FromRole="InterviewCompletedStageMapping" ToRole="Stage" />
+          <Property Name="FeedBack" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_InterviewCompletedStageMapping_InterviewDetails">
           <End Type="InterviewAcerModel.InterviewDetail" Role="InterviewDetail" Multiplicity="1" />
@@ -529,41 +478,6 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="InterviewCompletedStageMapping">
-              <PropertyRef Name="StageId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="InterviewStageFeedback">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="InterviewId" Type="Int32" Nullable="false" />
-          <Property Name="StageId" Type="Int32" Nullable="false" />
-          <Property Name="Feedback" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="InterviewDetail" Relationship="InterviewAcerModel.FK_InterviewStageFeedback_InterviewDetails" FromRole="InterviewStageFeedback" ToRole="InterviewDetail" />
-          <NavigationProperty Name="Stage" Relationship="InterviewAcerModel.FK_InterviewStageFeedback_Stages" FromRole="InterviewStageFeedback" ToRole="Stage" />
-        </EntityType>
-        <Association Name="FK_InterviewStageFeedback_InterviewDetails">
-          <End Type="InterviewAcerModel.InterviewDetail" Role="InterviewDetail" Multiplicity="1" />
-          <End Type="InterviewAcerModel.InterviewStageFeedback" Role="InterviewStageFeedback" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="InterviewDetail">
-              <PropertyRef Name="InterviewDetailId" />
-            </Principal>
-            <Dependent Role="InterviewStageFeedback">
-              <PropertyRef Name="InterviewId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_InterviewStageFeedback_Stages">
-          <End Type="InterviewAcerModel.Stage" Role="Stage" Multiplicity="1" />
-          <End Type="InterviewAcerModel.InterviewStageFeedback" Role="InterviewStageFeedback" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Stage">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="InterviewStageFeedback">
               <PropertyRef Name="StageId" />
             </Dependent>
           </ReferentialConstraint>
@@ -658,6 +572,7 @@
           <EntitySetMapping Name="InterviewCompletedStageMappings">
             <EntityTypeMapping TypeName="InterviewAcerModel.InterviewCompletedStageMapping">
               <MappingFragment StoreEntitySet="InterviewCompletedStageMapping">
+                <ScalarProperty Name="FeedBack" ColumnName="FeedBack" />
                 <ScalarProperty Name="StageId" ColumnName="StageId" />
                 <ScalarProperty Name="InterviewId" ColumnName="InterviewId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -665,16 +580,6 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="usp_UpdateCheckList" FunctionName="InterviewAcerModel.Store.usp_UpdateCheckList" />
-          <EntitySetMapping Name="InterviewStageFeedbacks">
-            <EntityTypeMapping TypeName="InterviewAcerModel.InterviewStageFeedback">
-              <MappingFragment StoreEntitySet="InterviewStageFeedback">
-                <ScalarProperty Name="Feedback" ColumnName="Feedback" />
-                <ScalarProperty Name="StageId" ColumnName="StageId" />
-                <ScalarProperty Name="InterviewId" ColumnName="InterviewId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

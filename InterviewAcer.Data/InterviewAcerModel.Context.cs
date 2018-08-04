@@ -35,7 +35,6 @@ namespace InterviewAcer.Data
         public virtual DbSet<Stage> Stages { get; set; }
         public virtual DbSet<InterviewCheckListMapping> InterviewCheckListMappings { get; set; }
         public virtual DbSet<InterviewCompletedStageMapping> InterviewCompletedStageMappings { get; set; }
-        public virtual DbSet<InterviewStageFeedback> InterviewStageFeedbacks { get; set; }
     
         public virtual ObjectResult<GetInterviewStage_Result> GetInterviewStage(Nullable<int> interviewId)
         {

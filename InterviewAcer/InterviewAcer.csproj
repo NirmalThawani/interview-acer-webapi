@@ -311,6 +311,10 @@
       <Project>{6fff75aa-1137-4b8a-b198-5f2808d93bd8}</Project>
       <Name>InterviewAcer.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\InterviewAcer.Data\InterviewAcer.Data.csproj">
+      <Project>{79C3FBF2-8DFF-4C53-B131-44DE79373168}</Project>
+      <Name>InterviewAcer.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\InterviewAcer.Repository\InterviewAcer.Repository.csproj">
       <Project>{4690bc7d-4adb-44f8-a6c6-5f409cb9095a}</Project>
       <Name>InterviewAcer.Repository</Name>

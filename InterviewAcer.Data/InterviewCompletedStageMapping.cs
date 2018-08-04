@@ -17,6 +17,7 @@ namespace InterviewAcer.Data
         public int Id { get; set; }
         public int InterviewId { get; set; }
         public int StageId { get; set; }
+        public string FeedBack { get; set; }
     
         public virtual InterviewDetail InterviewDetail { get; set; }
         public virtual Stage Stage { get; set; }

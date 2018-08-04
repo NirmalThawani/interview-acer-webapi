@@ -85,6 +85,7 @@
     <EntitySetMapping Name="InterviewCompletedStageMappings">
       <EntityTypeMapping TypeName="InterviewAcerModel.InterviewCompletedStageMapping">
         <MappingFragment StoreEntitySet="InterviewCompletedStageMapping">
+          <ScalarProperty Name="FeedBack" ColumnName="FeedBack" />
           <ScalarProperty Name="StageId" ColumnName="StageId" />
           <ScalarProperty Name="InterviewId" ColumnName="InterviewId" />
           <ScalarProperty Name="Id" ColumnName="Id" />

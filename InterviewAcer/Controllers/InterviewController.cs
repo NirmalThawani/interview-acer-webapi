@@ -67,9 +67,10 @@ namespace InterviewAcer.Controllers
                 {
                     var claimsIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
                     var userName = claimsIdentity.Claims.Where(x => x.Type == "sub").Select(y => y.Value).SingleOrDefault();
-                    _unitOfWork.GetInterviewRepository().SaveInterviewDetails(interviewDetails, userName);
+                    var savedInterviewDetails = _unitOfWork.GetInterviewRepository().SaveInterviewDetails(interviewDetails, userName);
                     await _unitOfWork.Save();
-                    return Ok();
+                    var response = new { interviewId = savedInterviewDetails.InterviewDetailId };
+                    return Ok(response);
                 }
                 else
                 {

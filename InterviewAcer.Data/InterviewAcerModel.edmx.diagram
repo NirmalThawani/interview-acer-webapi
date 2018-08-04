@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="b618d28159e54b7d82408f78590264a6" Name="Diagram1" ZoomLevel="65">
+      <Diagram DiagramId="b618d28159e54b7d82408f78590264a6" Name="Diagram1" ZoomLevel="97">
         <EntityTypeShape EntityType="InterviewAcerModel.InterviewDetail" Width="1.5" PointX="2.375" PointY="1.125" IsExpanded="true" />
         <EntityTypeShape EntityType="InterviewAcerModel.InterviewType" Width="1.5" PointX="0.5" PointY="0.875" IsExpanded="true" />
         <AssociationConnector Association="InterviewAcerModel.FK_InterviewDetails_InterviewTypes" ManuallyRouted="false" />
@@ -22,9 +22,6 @@
         <EntityTypeShape EntityType="InterviewAcerModel.InterviewCompletedStageMapping" Width="1.5" PointX="9.25" PointY="0.75" />
         <AssociationConnector Association="InterviewAcerModel.FK_InterviewCompletedStageMapping_InterviewDetails" />
         <AssociationConnector Association="InterviewAcerModel.FK_InterviewCompletedStageMapping_Stages" />
-        <EntityTypeShape EntityType="InterviewAcerModel.InterviewStageFeedback" Width="1.5" PointX="5.25" PointY="8.25" />
-        <AssociationConnector Association="InterviewAcerModel.FK_InterviewStageFeedback_InterviewDetails" />
-        <AssociationConnector Association="InterviewAcerModel.FK_InterviewStageFeedback_Stages" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
