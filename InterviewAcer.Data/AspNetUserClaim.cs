@@ -15,20 +15,20 @@ namespace InterviewAcer.Data
 using System;
     using System.Collections.Generic;
     
-public partial class InterviewCheckListMapping
+public partial class AspNetUserClaim
 {
 
     public int Id { get; set; }
 
-    public int InterviewId { get; set; }
+    public string UserId { get; set; }
 
-    public int CheckListId { get; set; }
+    public string ClaimType { get; set; }
+
+    public string ClaimValue { get; set; }
 
 
 
-    public virtual GroupCheckList GroupCheckList { get; set; }
-
-    public virtual InterviewDetail InterviewDetail { get; set; }
+    public virtual AspNetUser AspNetUser { get; set; }
 
 }
 

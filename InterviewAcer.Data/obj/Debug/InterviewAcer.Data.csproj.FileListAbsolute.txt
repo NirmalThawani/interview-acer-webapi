@@ -8,3 +8,13 @@ W:\InterviewAcer\InterviewAcer\InterviewAcer.Data\bin\Debug\EntityFramework.SqlS
 W:\InterviewAcer\InterviewAcer\InterviewAcer.Data\obj\Debug\InterviewAcer.Data.dll
 W:\InterviewAcer\InterviewAcer\InterviewAcer.Data\obj\Debug\InterviewAcer.Data.pdb
 W:\InterviewAcer\InterviewAcer\InterviewAcer.Data\obj\Debug\InterviewAcer.Data.csprojResolveAssemblyReference.cache
+C:\Users\admin\Desktop\merged code\interview-acer-webapi\InterviewAcer.Data\bin\Debug\InterviewAcer.Data.dll.config
+C:\Users\admin\Desktop\merged code\interview-acer-webapi\InterviewAcer.Data\bin\Debug\InterviewAcer.Data.dll
+C:\Users\admin\Desktop\merged code\interview-acer-webapi\InterviewAcer.Data\bin\Debug\InterviewAcer.Data.pdb
+C:\Users\admin\Desktop\merged code\interview-acer-webapi\InterviewAcer.Data\bin\Debug\EntityFramework.dll
+C:\Users\admin\Desktop\merged code\interview-acer-webapi\InterviewAcer.Data\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\admin\Desktop\merged code\interview-acer-webapi\InterviewAcer.Data\bin\Debug\EntityFramework.xml
+C:\Users\admin\Desktop\merged code\interview-acer-webapi\InterviewAcer.Data\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\admin\Desktop\merged code\interview-acer-webapi\InterviewAcer.Data\obj\Debug\InterviewAcer.Data.csprojResolveAssemblyReference.cache
+C:\Users\admin\Desktop\merged code\interview-acer-webapi\InterviewAcer.Data\obj\Debug\InterviewAcer.Data.dll
+C:\Users\admin\Desktop\merged code\interview-acer-webapi\InterviewAcer.Data\obj\Debug\InterviewAcer.Data.pdb

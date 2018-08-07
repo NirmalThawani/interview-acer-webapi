@@ -15,20 +15,16 @@ namespace InterviewAcer.Data
 using System;
     using System.Collections.Generic;
     
-public partial class InterviewCheckListMapping
+public partial class C__MigrationHistory
 {
 
-    public int Id { get; set; }
+    public string MigrationId { get; set; }
 
-    public int InterviewId { get; set; }
+    public string ContextKey { get; set; }
 
-    public int CheckListId { get; set; }
+    public byte[] Model { get; set; }
 
-
-
-    public virtual GroupCheckList GroupCheckList { get; set; }
-
-    public virtual InterviewDetail InterviewDetail { get; set; }
+    public string ProductVersion { get; set; }
 
 }
 

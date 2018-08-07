@@ -63,6 +63,33 @@
     <FunctionImport Name="GetInterviewStage" ReturnType="Collection(InterviewAcerModel.GetInterviewStage_Result)">
       <Parameter Name="InterviewId" Mode="In" Type="Int32" />
     </FunctionImport>
+    <FunctionImport Name="usp_GetCompletedStages" ReturnType="Collection(InterviewAcerModel.usp_GetCompletedStages_Result)">
+      <Parameter Name="interviewId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="usp_GetUserTotalScore" ReturnType="Collection(Int32)">
+      <Parameter Name="UserId" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="usp_UpdateCheckList" ReturnType="Collection(Int32)">
+      <Parameter Name="checklistId" Mode="In" Type="Int32" />
+      <Parameter Name="interviewId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <EntitySet Name="C__MigrationHistory" EntityType="InterviewAcerModel.C__MigrationHistory" />
+    <EntitySet Name="AspNetRoles" EntityType="InterviewAcerModel.AspNetRole" />
+    <EntitySet Name="AspNetUserClaims" EntityType="InterviewAcerModel.AspNetUserClaim" />
+    <EntitySet Name="AspNetUserLogins" EntityType="InterviewAcerModel.AspNetUserLogin" />
+    <EntitySet Name="AspNetUsers" EntityType="InterviewAcerModel.AspNetUser" />
+    <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="InterviewAcerModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+      <End Role="AspNetUser" EntitySet="AspNetUsers" />
+      <End Role="AspNetUserClaim" EntitySet="AspNetUserClaims" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="InterviewAcerModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+      <End Role="AspNetUser" EntitySet="AspNetUsers" />
+      <End Role="AspNetUserLogin" EntitySet="AspNetUserLogins" />
+    </AssociationSet>
+    <AssociationSet Name="AspNetUserRoles" Association="InterviewAcerModel.AspNetUserRoles">
+      <End Role="AspNetRole" EntitySet="AspNetRoles" />
+      <End Role="AspNetUser" EntitySet="AspNetUsers" />
+    </AssociationSet>
     <EntitySet Name="InterviewCheckListMappings" EntityType="InterviewAcerModel.InterviewCheckListMapping" />
     <AssociationSet Name="FK_InterviewCheckListMapping_GroupCheckList" Association="InterviewAcerModel.FK_InterviewCheckListMapping_GroupCheckList">
       <End Role="GroupCheckList" EntitySet="GroupCheckLists" />
@@ -72,12 +99,6 @@
       <End Role="InterviewDetail" EntitySet="InterviewDetails" />
       <End Role="InterviewCheckListMapping" EntitySet="InterviewCheckListMappings" />
     </AssociationSet>
-    <FunctionImport Name="usp_GetCompletedStages" ReturnType="Collection(InterviewAcerModel.usp_GetCompletedStages_Result)">
-      <Parameter Name="interviewId" Mode="In" Type="Int32" />
-    </FunctionImport>
-    <FunctionImport Name="usp_GetUserTotalScore" ReturnType="Collection(Int32)">
-      <Parameter Name="UserId" Mode="In" Type="String" />
-    </FunctionImport>
     <EntitySet Name="InterviewCompletedStageMappings" EntityType="InterviewAcerModel.InterviewCompletedStageMapping" />
     <AssociationSet Name="FK_InterviewCompletedStageMapping_InterviewDetails" Association="InterviewAcerModel.FK_InterviewCompletedStageMapping_InterviewDetails">
       <End Role="InterviewDetail" EntitySet="InterviewDetails" />
@@ -87,10 +108,6 @@
       <End Role="Stage" EntitySet="Stages" />
       <End Role="InterviewCompletedStageMapping" EntitySet="InterviewCompletedStageMappings" />
     </AssociationSet>
-    <FunctionImport Name="usp_UpdateCheckList" ReturnType="Collection(Int32)">
-      <Parameter Name="checklistId" Mode="In" Type="Int32" />
-      <Parameter Name="interviewId" Mode="In" Type="Int32" />
-    </FunctionImport>
   </EntityContainer>
   <EntityType Name="ForgotPassword">
     <Key>
@@ -176,6 +193,107 @@
     <Property Type="Int32" Name="Id" Nullable="false" />
     <Property Type="Int32" Name="Sequence" Nullable="false" />
   </ComplexType>
+  <ComplexType Name="usp_GetCompletedStages_Result">
+    <Property Type="Int32" Name="StageId" Nullable="false" />
+  </ComplexType>
+  <EntityType Name="C__MigrationHistory">
+    <Key>
+      <PropertyRef Name="MigrationId" />
+      <PropertyRef Name="ContextKey" />
+    </Key>
+    <Property Name="MigrationId" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="ContextKey" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="true" />
+    <Property Name="Model" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+    <Property Name="ProductVersion" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="AspNetRole">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="AspNetUsers" Relationship="InterviewAcerModel.AspNetUserRoles" FromRole="AspNetRole" ToRole="AspNetUser" />
+  </EntityType>
+  <EntityType Name="AspNetUserClaim">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="AspNetUser" Relationship="InterviewAcerModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUserClaim" ToRole="AspNetUser" />
+  </EntityType>
+  <EntityType Name="AspNetUserLogin">
+    <Key>
+      <PropertyRef Name="LoginProvider" />
+      <PropertyRef Name="ProviderKey" />
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="LoginProvider" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="ProviderKey" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="AspNetUser" Relationship="InterviewAcerModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUserLogin" ToRole="AspNetUser" />
+  </EntityType>
+  <EntityType Name="AspNetUser">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="LicenseKey" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="UniversityName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CountryCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Specialization" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="AcadamicScore" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ProfilePicture" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+    <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+    <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+    <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+    <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+    <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+    <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+    <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="AspNetUserClaims" Relationship="InterviewAcerModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserClaim" />
+    <NavigationProperty Name="AspNetUserLogins" Relationship="InterviewAcerModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserLogin" />
+    <NavigationProperty Name="AspNetRoles" Relationship="InterviewAcerModel.AspNetUserRoles" FromRole="AspNetUser" ToRole="AspNetRole" />
+  </EntityType>
+  <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+    <End Type="InterviewAcerModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="InterviewAcerModel.AspNetUserClaim" Role="AspNetUserClaim" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AspNetUser">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="AspNetUserClaim">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+    <End Type="InterviewAcerModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="InterviewAcerModel.AspNetUserLogin" Role="AspNetUserLogin" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AspNetUser">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="AspNetUserLogin">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="AspNetUserRoles">
+    <End Type="InterviewAcerModel.AspNetRole" Role="AspNetRole" Multiplicity="*" />
+    <End Type="InterviewAcerModel.AspNetUser" Role="AspNetUser" Multiplicity="*" />
+  </Association>
   <EntityType Name="InterviewCheckListMapping">
     <Key>
       <PropertyRef Name="Id" />
@@ -210,19 +328,16 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <ComplexType Name="usp_GetCompletedStages_Result">
-    <Property Type="Int32" Name="StageId" Nullable="false" />
-  </ComplexType>
   <EntityType Name="InterviewCompletedStageMapping">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
-    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="InterviewId" Type="Int32" Nullable="false" />
     <Property Name="StageId" Type="Int32" Nullable="false" />
+    <Property Name="FeedBack" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <NavigationProperty Name="InterviewDetail" Relationship="InterviewAcerModel.FK_InterviewCompletedStageMapping_InterviewDetails" FromRole="InterviewCompletedStageMapping" ToRole="InterviewDetail" />
     <NavigationProperty Name="Stage" Relationship="InterviewAcerModel.FK_InterviewCompletedStageMapping_Stages" FromRole="InterviewCompletedStageMapping" ToRole="Stage" />
-    <Property Name="FeedBack" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
   </EntityType>
   <Association Name="FK_InterviewCompletedStageMapping_InterviewDetails">
     <End Type="InterviewAcerModel.InterviewDetail" Role="InterviewDetail" Multiplicity="1" />

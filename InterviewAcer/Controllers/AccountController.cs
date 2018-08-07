@@ -132,6 +132,68 @@ namespace InterviewAcer.Controllers
 
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("SendOTP")]
+        public async Task<IHttpActionResult> SendOTP(string email, String UserId)
+        {
+            try
+            {
+
+                var OTP = _unitOfWork.GetForgotPasswordRepository().SaveOTP(new Common.DTO.ForgotPasswordDTO()
+                {
+                    OTP = GetOTP(),
+                    UserId = UserId,
+                    TokenCreationDate = DateTime.Now
+                });
+                await _unitOfWork.Save();
+                if (!string.IsNullOrEmpty(email))
+                    SendEmail(OTP, email);
+                var userIdResponse = new UserIdResponse() { UserId = UserId };
+                return Ok(userIdResponse);
+
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+
+        }
+
+        /// <summary>
+        /// verifies the OTP entered from user and save email
+        /// </summary>
+        /// <param name="verifyOtpAndSaveEmail"></param>
+        /// <returns>If OTP is valid status code 200 is returned. If OTP is not valid status code 404 is returned.</returns>
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("VerifyOTPAndSaveEmail")]
+        public async Task<IHttpActionResult> VerifyOTPAndSaveUser(VerifyOtpAndSaveUserRequest verifyOtpAndSaveEmail)
+        {
+            try
+            {
+                var isOTPValid = await _unitOfWork.GetForgotPasswordRepository().VerifyOTP(verifyOtpAndSaveEmail.OTP, verifyOtpAndSaveEmail.UserId);
+                if (isOTPValid)
+                {
+
+                    var isSavedEmail=await _repo.ChangeEmailAddress(verifyOtpAndSaveEmail.Email, verifyOtpAndSaveEmail.UserId);
+                    if (isSavedEmail)
+                        return Ok("Email change successfully");
+                    else
+                        return Content(HttpStatusCode.NotFound, "Email id is already exist");
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+
+        }
+
         private void SendEmail(string OTP, string userEmailAddress)
         {
             string fromAddress = ConfigurationManager.AppSettings["ResetPasswordMailFromAddress"];
@@ -317,6 +379,31 @@ namespace InterviewAcer.Controllers
             }
 
             return null;
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("ChangePassword")]
+        /// <summary>
+        /// chnage the password of the user.
+        /// </summary>
+        /// <param name="resetPasswordDetails"></param>
+        /// <returns>returns 200 status code, if password change is success</returns>
+        public async Task<IHttpActionResult> ChangePassword(ChangePasswordRequest changePasswordDetails)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                await _repo.ResetPassword(changePasswordDetails.NewPassword, changePasswordDetails.UserId);
+                return Ok("password change successfully");
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
         }
 
         private string GetOTP()
