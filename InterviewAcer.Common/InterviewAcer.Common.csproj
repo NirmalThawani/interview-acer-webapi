@@ -48,6 +48,8 @@
     <Compile Include="DTO\InterviewCurrentStatusDTO.cs" />
     <Compile Include="DTO\InterviewDetailsDTO.cs" />
     <Compile Include="DTO\StageDTO.cs" />
+    <Compile Include="DTO\UserGeneralDetailsDTO.cs" />
+    <Compile Include="DTO\UserSpecificDetailsDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

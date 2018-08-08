@@ -16,10 +16,10 @@ namespace InterviewAcer.Repository.Implementation
             _dbContext = dbContext;
         }
 
-        public async Task<List<InterviewDetailsDTO>> GetInterviewDetails(string userName)
+        public async Task<List<InterviewDetailsDTO>> GetInterviewDetails(string userId)
         {
             List<InterviewDetailsDTO> interviewDetailsList = new List<InterviewDetailsDTO>();
-            var interviewDetails = await _dbContext.InterviewDetails.Where(x => x.UserName == userName).ToListAsync();
+            var interviewDetails = await _dbContext.InterviewDetails.Where(x => x.UserId == userId).ToListAsync();
             foreach (var item in interviewDetails)
             {
                 var interviewDetailItem = new InterviewDetailsDTO();
@@ -30,6 +30,7 @@ namespace InterviewAcer.Repository.Implementation
                 interviewDetailItem.InterviewTypeId = item.InterviewTypeId;
                 interviewDetailItem.Tag = item.ColorCode;
                 interviewDetailItem.InterviewId = item.InterviewDetailId;
+                interviewDetailItem.InterviewTypeName = _dbContext.InterviewTypes.FirstOrDefault(x => x.InterviewTypeId == item.InterviewTypeId).InterviewTypeName;
                 var stages = _dbContext.Stages.Where(x => x.InterviewTypeId == interviewDetailItem.InterviewTypeId);
                 if (stages != null && stages.Any())
                 {
@@ -52,7 +53,7 @@ namespace InterviewAcer.Repository.Implementation
             return interviewDetailsList;
         }
 
-        public InterviewDetail SaveInterviewDetails(InterviewDetailsDTO interviewDetails, string userName)
+        public InterviewDetail SaveInterviewDetails(InterviewDetailsDTO interviewDetails, string userId)
         {
             var interviewDetailEntity = new InterviewDetail();
             interviewDetailEntity.CompanyName = interviewDetails.CompanyName;
@@ -60,7 +61,7 @@ namespace InterviewAcer.Repository.Implementation
             interviewDetailEntity.HiringIndividualName = interviewDetails.HiringIndividualName;
             interviewDetailEntity.InterviewDate = interviewDetails.InterviewDate;
             interviewDetailEntity.InterviewTypeId = interviewDetails.InterviewTypeId;
-            interviewDetailEntity.UserName = userName;
+            interviewDetailEntity.UserId = userId;
             interviewDetailEntity.ColorCode = interviewDetails.Tag;
             return _dbContext.InterviewDetails.Add(interviewDetailEntity);
         }
@@ -106,7 +107,7 @@ namespace InterviewAcer.Repository.Implementation
         public void MarkStageAsComplete(int stageId, int interviewId)
         {
             var isCompleted = _dbContext.InterviewCompletedStageMappings.FirstOrDefault(x => x.InterviewId == interviewId && x.StageId == stageId);
-            if(isCompleted ==  null)
+            if (isCompleted == null)
             {
                 _dbContext.InterviewCompletedStageMappings.Add(new InterviewCompletedStageMapping() { InterviewId = interviewId, StageId = stageId });
             }
@@ -120,5 +121,14 @@ namespace InterviewAcer.Repository.Implementation
             interviewFeedback.FeedBack = feedback;
 
         }
+
+        public void GetNumberOfCheckListCompleted(string userId, ref UserSpecificDetailsDTO userCheckListDetails)
+        {
+            var result = _dbContext.usp_GetCheckListDetailsForUser(userId).FirstOrDefault();
+            userCheckListDetails.TotalNumberOfCheckListCompleted = result.TotalCheckListChecked ?? 0;
+            userCheckListDetails.TotalNumberOfPointsScored = result.TotalPointsScored ?? 0;
+            userCheckListDetails.OngoingInterviews = _dbContext.InterviewDetails.Where(x => x.UserId == userId).Count();
+        }
+
     }
 }

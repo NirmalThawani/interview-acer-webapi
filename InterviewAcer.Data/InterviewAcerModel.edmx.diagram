@@ -30,6 +30,7 @@
         <EntityTypeShape EntityType="InterviewAcerModel.InterviewCompletedStageMapping" Width="2.25" PointX="9.25" PointY="1.25" />
         <AssociationConnector Association="InterviewAcerModel.FK_InterviewCompletedStageMapping_InterviewDetails" />
         <AssociationConnector Association="InterviewAcerModel.FK_InterviewCompletedStageMapping_Stages" />
+        <AssociationConnector Association="InterviewAcerModel.FK_ForgotPassword_AspNetUsers" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

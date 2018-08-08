@@ -11,5 +11,7 @@ namespace InterviewAcer.Models
         public string Specialization { get; set; }
         public string AcadamicScore { get; set; }
         public string ProfilePicture { get; set; }
+        //public string UniversityCode { get; set; }
+        //public bool IsActive { get; set; }
     }
 }

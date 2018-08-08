@@ -13,10 +13,12 @@ namespace InterviewAcer.Controllers
 {
     public class InterviewController : ApiController
     {
+        private AuthRepository.AuthRepository _authRepository = null;
         private IUnitOfWork _unitOfWork { get; set; }
         public InterviewController()
         {
             _unitOfWork = new UnitOfWork();
+            _authRepository = new AuthRepository.AuthRepository();
         }
 
 
@@ -33,7 +35,8 @@ namespace InterviewAcer.Controllers
             {
                 var claimsIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
                 var userName = claimsIdentity.Claims.Where(x => x.Type == "sub").Select(y => y.Value).SingleOrDefault();
-                var interviewDetails = await _unitOfWork.GetInterviewRepository().GetInterviewDetails(userName);
+                var user = await _authRepository.FindUser(userName);
+                var interviewDetails = await _unitOfWork.GetInterviewRepository().GetInterviewDetails(user.Id);
                 if (interviewDetails == null || interviewDetails.Count == 0)
                 {
                     return NotFound();
@@ -67,7 +70,8 @@ namespace InterviewAcer.Controllers
                 {
                     var claimsIdentity = RequestContext.Principal.Identity as ClaimsIdentity;
                     var userName = claimsIdentity.Claims.Where(x => x.Type == "sub").Select(y => y.Value).SingleOrDefault();
-                    var savedInterviewDetails = _unitOfWork.GetInterviewRepository().SaveInterviewDetails(interviewDetails, userName);
+                    var user = await _authRepository.FindUser(userName);                                        
+                    var savedInterviewDetails = _unitOfWork.GetInterviewRepository().SaveInterviewDetails(interviewDetails, user.Id);
                     await _unitOfWork.Save();
                     var response = new { interviewId = savedInterviewDetails.InterviewDetailId };
                     return Ok(response);

@@ -568,11 +568,7 @@ namespace InterviewAcer.Controllers
                     extension = extension.Substring(extension.IndexOf(".") + 1);
                 }
 
-                //If requested file is an image than load file to memory
-                if (GetImageFormat(extension) != null)
-                {
-                    ms = CopyFileToMemory(filePath);
-                }
+                ms = CopyFileToMemory(filePath);
             }
 
             if (ms == null)
@@ -585,6 +581,51 @@ namespace InterviewAcer.Controllers
             result.Content = new ByteArrayContent(ms.ToArray());
             result.Content.Headers.ContentType = new MediaTypeHeaderValue(string.Format("image/{0}", extension));
             return result;
+        }
+
+
+
+        public IHttpActionResult GetAllUsersGeneralInformation()
+        {
+            try
+            {
+                var users = _repo.GetAllUserGeneralInformation();
+                if (users == null || !users.Any())
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(users);
+                }
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+        }
+
+        public async Task<IHttpActionResult> GetUserSpecificInformation(string userId)
+        {
+            try
+            {
+                var userDetails = _repo.GetUserSpecificInformation(userId);
+                _unitOfWork.GetInterviewRepository().GetNumberOfCheckListCompleted(userId, ref userDetails);
+                userDetails.InterviewDetails = await _unitOfWork.GetInterviewRepository().GetInterviewDetails(userId);
+                if (userDetails == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+
+                    return Ok(userDetails);
+                }
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
         }
 
     }

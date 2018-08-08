@@ -109,6 +109,9 @@
     <Compile Include="StageGroup.cs">
       <DependentUpon>InterviewAcerModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="usp_GetCheckListDetailsForUser_Result.cs">
+      <DependentUpon>InterviewAcerModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="usp_GetCompletedStages_Result.cs">
       <DependentUpon>InterviewAcerModel.tt</DependentUpon>
     </Compile>

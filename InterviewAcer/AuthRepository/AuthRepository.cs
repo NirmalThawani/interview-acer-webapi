@@ -3,6 +3,8 @@ using Microsoft.AspNet.Identity;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
+using InterviewAcer.Common.DTO;
+using System.Collections.Generic;
 
 namespace InterviewAcer.AuthRepository
 {
@@ -135,7 +137,47 @@ namespace InterviewAcer.AuthRepository
             return await _userManager.AddPasswordAsync(userId, password);
         }
 
+        public List<UserGeneralDetailsDTO> GetAllUserGeneralInformation()
+        {
+            List<UserGeneralDetailsDTO> userDetails = new List<UserGeneralDetailsDTO>();
+            var users = _userManager.Users;
+            foreach(var user in users)
+            {
+               if(!_userManager.IsInRole(user.Id, "Administrator"))
+                {
+                    UserGeneralDetailsDTO userDetailItem = new UserGeneralDetailsDTO();
+                    userDetailItem.FullName = user.Name;
+                    userDetailItem.MobileNumber = user.PhoneNumber;
+                    userDetailItem.UniversityName = user.UniversityName;
+                    userDetailItem.Status = "Active";
+                    userDetailItem.UniversityCode = "NO CODE";
+                    userDetailItem.EmailAddress = user.Email;
+                    userDetailItem.UserId = user.Id;
+                    userDetails.Add(userDetailItem);
+                }             
+            }
+            return userDetails;
+        }
 
+        public UserSpecificDetailsDTO GetUserSpecificInformation(string userId)
+        {
+            UserSpecificDetailsDTO userDetails = new UserSpecificDetailsDTO();
+            var user = _userManager.FindById(userId);
+            if(user != null)
+            {
+                userDetails.MobileNumber = user.PhoneNumber;
+                userDetails.Specialization = user.Specialization;
+                userDetails.Status = "Active";
+                userDetails.UniversityName = user.UniversityName;
+                userDetails.UserId = user.Id;
+                userDetails.UniversityCode = "No CODE";
+                userDetails.FullName = user.Name;
+                userDetails.EmailAddress = user.Email;
+                userDetails.AcadamicScore = user.AcadamicScore;
+                userDetails.imagePath = user.ProfilePicture;
+            }
+            return userDetails;
+        }
 
         public void Dispose()
         {

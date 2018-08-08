@@ -8,6 +8,6 @@ namespace InterviewAcer.Repository.Contract
     interface IInterviewRepository
     {
         Task<List<InterviewDetailsDTO>> GetInterviewDetails(string userName);
-        InterviewDetail SaveInterviewDetails(InterviewDetailsDTO interviewDetails, string userName);
+        InterviewDetail SaveInterviewDetails(InterviewDetailsDTO interviewDetails, string userId);
     }
 }

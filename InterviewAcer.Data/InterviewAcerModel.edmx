@@ -118,7 +118,7 @@
           <Property Name="InterviewDate" Type="date" Nullable="false" />
           <Property Name="InterviewTypeId" Type="int" Nullable="false" />
           <Property Name="HiringIndividualName" Type="nvarchar(max)" />
-          <Property Name="UserName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar(max)" Nullable="false" />
           <Property Name="ColorCode" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="InterviewTypes">
@@ -198,6 +198,18 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="AspNetUserRoles">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ForgotPassword_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="ForgotPassword" Type="Self.ForgotPassword" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ForgotPassword">
               <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
@@ -301,6 +313,9 @@
         <Function Name="GetInterviewStage" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="InterviewId" Type="int" Mode="In" />
         </Function>
+        <Function Name="usp_GetCheckListDetailsForUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userId" Type="nvarchar(max)" Mode="In" />
+        </Function>
         <Function Name="usp_GetUserTotalScore" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserId" Type="nvarchar(max)" Mode="In" />
         </Function>
@@ -338,6 +353,10 @@
           <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ForgotPassword_AspNetUsers" Association="Self.FK_ForgotPassword_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="ForgotPassword" EntitySet="ForgotPassword" />
           </AssociationSet>
           <AssociationSet Name="FK_GroupCheckList_StageGroups" Association="Self.FK_GroupCheckList_StageGroups">
             <End Role="StageGroups" EntitySet="StageGroups" />
@@ -386,11 +405,11 @@
           <Property Name="InterviewDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="InterviewTypeId" Type="Int32" Nullable="false" />
           <Property Name="HiringIndividualName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="UserName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="InterviewType" Relationship="Self.FK_InterviewDetails_InterviewTypes" FromRole="InterviewDetails" ToRole="InterviewTypes" />
           <Property Name="ColorCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="InterviewCheckListMappings" Relationship="InterviewAcerModel.FK_InterviewCheckListMapping_InterviewDetails" FromRole="InterviewDetail" ToRole="InterviewCheckListMapping" />
           <NavigationProperty Name="InterviewCompletedStageMappings" Relationship="InterviewAcerModel.FK_InterviewCompletedStageMapping_InterviewDetails" FromRole="InterviewDetail" ToRole="InterviewCompletedStageMapping" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           
         </EntityType>
         <EntityType Name="InterviewType">
@@ -486,6 +505,13 @@
             <End Role="Stage" EntitySet="Stages" />
             <End Role="InterviewCompletedStageMapping" EntitySet="InterviewCompletedStageMappings" />
           </AssociationSet>
+          <AssociationSet Name="FK_ForgotPassword_AspNetUsers" Association="InterviewAcerModel.FK_ForgotPassword_AspNetUsers">
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+            <End Role="ForgotPassword" EntitySet="ForgotPasswords" />
+          </AssociationSet>
+          <FunctionImport Name="usp_GetCheckListDetailsForUser" ReturnType="Collection(InterviewAcerModel.usp_GetCheckListDetailsForUser_Result)">
+            <Parameter Name="userId" Mode="In" Type="String" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="ForgotPassword">
           <Key>
@@ -495,6 +521,7 @@
           <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="OTP" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="AspNetUser" Relationship="InterviewAcerModel.FK_ForgotPassword_AspNetUsers" FromRole="ForgotPassword" ToRole="AspNetUser" />
         </EntityType>
         <EntityType Name="GroupCheckList">
           <Key>
@@ -641,6 +668,7 @@
           <NavigationProperty Name="AspNetUserClaims" Relationship="InterviewAcerModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserClaim" />
           <NavigationProperty Name="AspNetUserLogins" Relationship="InterviewAcerModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserLogin" />
           <NavigationProperty Name="AspNetRoles" Relationship="InterviewAcerModel.AspNetUserRoles" FromRole="AspNetUser" ToRole="AspNetRole" />
+          <NavigationProperty Name="ForgotPasswords" Relationship="InterviewAcerModel.FK_ForgotPassword_AspNetUsers" FromRole="AspNetUser" ToRole="ForgotPassword" />
         </EntityType>
         <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
           <End Type="InterviewAcerModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
@@ -743,6 +771,22 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ForgotPassword_AspNetUsers">
+          <End Type="InterviewAcerModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+          <End Type="InterviewAcerModel.ForgotPassword" Role="ForgotPassword" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUser">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ForgotPassword">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="usp_GetCheckListDetailsForUser_Result">
+          <Property Type="Int32" Name="TotalCheckListChecked" Nullable="true" />
+          <Property Type="Int32" Name="TotalPointsScored" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -752,6 +796,7 @@
           <EntitySetMapping Name="InterviewDetails">
             <EntityTypeMapping TypeName="InterviewAcerModel.InterviewDetail">
               <MappingFragment StoreEntitySet="InterviewDetails">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="ColorCode" ColumnName="ColorCode" />
                 <ScalarProperty Name="InterviewDetailId" ColumnName="InterviewDetailId" />
                 <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
@@ -759,7 +804,6 @@
                 <ScalarProperty Name="InterviewDate" ColumnName="InterviewDate" />
                 <ScalarProperty Name="InterviewTypeId" ColumnName="InterviewTypeId" />
                 <ScalarProperty Name="HiringIndividualName" ColumnName="HiringIndividualName" />
-                <ScalarProperty Name="UserName" ColumnName="UserName" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -911,6 +955,14 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetCheckListDetailsForUser" FunctionName="InterviewAcerModel.Store.usp_GetCheckListDetailsForUser">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="InterviewAcerModel.usp_GetCheckListDetailsForUser_Result">
+                <ScalarProperty Name="TotalCheckListChecked" ColumnName="TotalCheckListChecked" />
+                <ScalarProperty Name="TotalPointsScored" ColumnName="TotalPointsScored" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
