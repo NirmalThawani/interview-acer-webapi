@@ -4,6 +4,7 @@
     <EntitySetMapping Name="InterviewDetails">
       <EntityTypeMapping TypeName="InterviewAcerModel.InterviewDetail">
         <MappingFragment StoreEntitySet="InterviewDetails">
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
           <ScalarProperty Name="ColorCode" ColumnName="ColorCode" />
           <ScalarProperty Name="InterviewDetailId" ColumnName="InterviewDetailId" />
           <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
@@ -11,7 +12,6 @@
           <ScalarProperty Name="InterviewDate" ColumnName="InterviewDate" />
           <ScalarProperty Name="InterviewTypeId" ColumnName="InterviewTypeId" />
           <ScalarProperty Name="HiringIndividualName" ColumnName="HiringIndividualName" />
-          <ScalarProperty Name="UserName" ColumnName="UserName" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -163,5 +163,13 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="usp_GetCheckListDetailsForUser" FunctionName="InterviewAcerModel.Store.usp_GetCheckListDetailsForUser">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="InterviewAcerModel.usp_GetCheckListDetailsForUser_Result">
+          <ScalarProperty Name="TotalCheckListChecked" ColumnName="TotalCheckListChecked" />
+          <ScalarProperty Name="TotalPointsScored" ColumnName="TotalPointsScored" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
   </EntityContainerMapping>
 </Mapping>

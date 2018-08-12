@@ -113,7 +113,7 @@
     <Property Name="InterviewDate" Type="date" Nullable="false" />
     <Property Name="InterviewTypeId" Type="int" Nullable="false" />
     <Property Name="HiringIndividualName" Type="nvarchar(max)" />
-    <Property Name="UserName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="UserId" Type="nvarchar(max)" Nullable="false" />
     <Property Name="ColorCode" Type="nvarchar(max)" />
   </EntityType>
   <EntityType Name="InterviewTypes">
@@ -193,6 +193,18 @@
         <PropertyRef Name="Id" />
       </Principal>
       <Dependent Role="AspNetUserRoles">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ForgotPassword_AspNetUsers">
+    <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+    <End Role="ForgotPassword" Type="Self.ForgotPassword" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AspNetUsers">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ForgotPassword">
         <PropertyRef Name="UserId" />
       </Dependent>
     </ReferentialConstraint>
@@ -296,6 +308,9 @@
   <Function Name="GetInterviewStage" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="InterviewId" Type="int" Mode="In" />
   </Function>
+  <Function Name="usp_GetCheckListDetailsForUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="userId" Type="nvarchar(max)" Mode="In" />
+  </Function>
   <Function Name="usp_GetUserTotalScore" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="UserId" Type="nvarchar(max)" Mode="In" />
   </Function>
@@ -333,6 +348,10 @@
     <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
       <End Role="AspNetUsers" EntitySet="AspNetUsers" />
       <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ForgotPassword_AspNetUsers" Association="Self.FK_ForgotPassword_AspNetUsers">
+      <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+      <End Role="ForgotPassword" EntitySet="ForgotPassword" />
     </AssociationSet>
     <AssociationSet Name="FK_GroupCheckList_StageGroups" Association="Self.FK_GroupCheckList_StageGroups">
       <End Role="StageGroups" EntitySet="StageGroups" />

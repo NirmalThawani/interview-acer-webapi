@@ -10,11 +10,11 @@
     <Property Name="InterviewDate" Type="DateTime" Nullable="false" Precision="0" />
     <Property Name="InterviewTypeId" Type="Int32" Nullable="false" />
     <Property Name="HiringIndividualName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="UserName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
     <NavigationProperty Name="InterviewType" Relationship="Self.FK_InterviewDetails_InterviewTypes" FromRole="InterviewDetails" ToRole="InterviewTypes" />
     <Property Name="ColorCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <NavigationProperty Name="InterviewCheckListMappings" Relationship="InterviewAcerModel.FK_InterviewCheckListMapping_InterviewDetails" FromRole="InterviewDetail" ToRole="InterviewCheckListMapping" />
     <NavigationProperty Name="InterviewCompletedStageMappings" Relationship="InterviewAcerModel.FK_InterviewCompletedStageMapping_InterviewDetails" FromRole="InterviewDetail" ToRole="InterviewCompletedStageMapping" />
+    <Property Name="UserId" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
   </EntityType>
   <EntityType Name="InterviewType">
     <Key>
@@ -108,6 +108,13 @@
       <End Role="Stage" EntitySet="Stages" />
       <End Role="InterviewCompletedStageMapping" EntitySet="InterviewCompletedStageMappings" />
     </AssociationSet>
+    <AssociationSet Name="FK_ForgotPassword_AspNetUsers" Association="InterviewAcerModel.FK_ForgotPassword_AspNetUsers">
+      <End Role="AspNetUser" EntitySet="AspNetUsers" />
+      <End Role="ForgotPassword" EntitySet="ForgotPasswords" />
+    </AssociationSet>
+    <FunctionImport Name="usp_GetCheckListDetailsForUser" ReturnType="Collection(InterviewAcerModel.usp_GetCheckListDetailsForUser_Result)">
+      <Parameter Name="userId" Mode="In" Type="String" />
+    </FunctionImport>
   </EntityContainer>
   <EntityType Name="ForgotPassword">
     <Key>
@@ -117,6 +124,7 @@
     <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
     <Property Name="OTP" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="AspNetUser" Relationship="InterviewAcerModel.FK_ForgotPassword_AspNetUsers" FromRole="ForgotPassword" ToRole="AspNetUser" />
   </EntityType>
   <EntityType Name="GroupCheckList">
     <Key>
@@ -261,6 +269,7 @@
     <NavigationProperty Name="AspNetUserClaims" Relationship="InterviewAcerModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserClaim" />
     <NavigationProperty Name="AspNetUserLogins" Relationship="InterviewAcerModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUser" ToRole="AspNetUserLogin" />
     <NavigationProperty Name="AspNetRoles" Relationship="InterviewAcerModel.AspNetUserRoles" FromRole="AspNetUser" ToRole="AspNetRole" />
+    <NavigationProperty Name="ForgotPasswords" Relationship="InterviewAcerModel.FK_ForgotPassword_AspNetUsers" FromRole="AspNetUser" ToRole="ForgotPassword" />
   </EntityType>
   <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
     <End Type="InterviewAcerModel.AspNetUser" Role="AspNetUser" Multiplicity="1">
@@ -363,4 +372,20 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_ForgotPassword_AspNetUsers">
+    <End Type="InterviewAcerModel.AspNetUser" Role="AspNetUser" Multiplicity="1" />
+    <End Type="InterviewAcerModel.ForgotPassword" Role="ForgotPassword" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AspNetUser">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ForgotPassword">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <ComplexType Name="usp_GetCheckListDetailsForUser_Result">
+    <Property Type="Int32" Name="TotalCheckListChecked" Nullable="true" />
+    <Property Type="Int32" Name="TotalPointsScored" Nullable="true" />
+  </ComplexType>
 </Schema>

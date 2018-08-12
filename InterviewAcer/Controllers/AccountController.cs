@@ -574,7 +574,7 @@ namespace InterviewAcer.Controllers
             if (ms == null)
             {
                 extension = "png";
-                ms = CopyFileToMemory(context.Server.MapPath("~/Content/ProfilePictures/fallback.png"));
+                ms = CopyFileToMemory(context.Server.MapPath("~/Content/ProfilePictures/default-user.png"));
             }
 
             HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
