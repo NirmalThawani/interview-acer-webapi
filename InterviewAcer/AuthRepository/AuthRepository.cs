@@ -37,12 +37,32 @@ namespace InterviewAcer.AuthRepository
                 EmailConfirmed = true,
                 LicenseKey = userModel.LicenseKey
             };
-
+                        
             var result = await _userManager.CreateAsync(user, userModel.Password);
 
             return result;
         }
 
+
+        public async Task<IdentityResult> RegisterUniAdmin(UserModel userModel)
+        {
+            ApplicationUser user = new ApplicationUser
+            {
+                Name = userModel.Name,
+                UserName = userModel.Email,
+                Email = userModel.Email,
+                EmailConfirmed = true,
+                LicenseKey = userModel.LicenseKey
+            };
+
+            var result = await _userManager.CreateAsync(user, userModel.Password);
+            if(result.Succeeded)
+            {
+                 _userManager.AddToRole(user.Id, "UniversityAdministrator");
+            }
+
+            return result;
+        }
 
 
         public async Task<IdentityResult> SavePersonalInfo(UserPersonalInfo personalInfo)

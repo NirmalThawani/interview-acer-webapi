@@ -64,6 +64,32 @@ namespace InterviewAcer.Controllers
             }
         }
 
+        [AllowAnonymous]
+        [Route("RegisterUniAdmin")]
+        public async Task<HttpResponseMessage> RegisterUniAdmin(UserModel userModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                var error = new ErrorResponse();
+                error.Error = "Registration Failed";
+                error.ErrorDescription = ModelState.Values.First().Errors.First().ErrorMessage;
+                return Request.CreateResponse(System.Net.HttpStatusCode.BadRequest, error);
+            }
+
+            IdentityResult result = await _repo.RegisterUniAdmin(userModel);
+
+            HttpResponseMessage errorResult = GetErrorResult(result);
+
+            if (errorResult != null)
+            {
+                return errorResult;
+            }
+            else
+            {
+                return new HttpResponseMessage(HttpStatusCode.OK);
+            }
+        }
+
         [HttpPost]
         [AllowAnonymous]
         [Route("Login")]

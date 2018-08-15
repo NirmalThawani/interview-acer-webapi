@@ -28,6 +28,10 @@ namespace InterviewAcer.AuthRepository
             {
                 var roleresult = _roleManager.Create(new IdentityRole("Candidate"));
             }
+            if (!_roleManager.RoleExists("UniversityAdministrator"))
+            {
+                var roleresult = _roleManager.Create(new IdentityRole("UniversityAdministrator"));
+            }
             var adminUser = _userManager.FindByName("tejashri.godse@omni-bridge.net");
             if(adminUser == null)
             {
@@ -49,6 +53,29 @@ namespace InterviewAcer.AuthRepository
                 if (userResult.Succeeded)
                 {
                     var result = _userManager.AddToRole(user.Id, "Administrator");
+                }
+            }
+            var uniAdminUser = _userManager.FindByName("uniadmin@omni-bridge.net");
+            if (uniAdminUser == null)
+            {
+                var user = new ApplicationUser()
+                {
+                    UserName = "uniadmin@omni-bridge.net",
+                    Email = "uniadmin@omni-bridge.net",
+                    EmailConfirmed = true,
+                    Name = "Tejashri Godse"
+                };
+
+                _userManager.UserValidator = new UserValidator<ApplicationUser>(_userManager)
+                {
+                    AllowOnlyAlphanumericUserNames = false,
+                    RequireUniqueEmail = true
+                };
+
+                IdentityResult userResult = _userManager.Create(user, "SuperPass");
+                if (userResult.Succeeded)
+                {
+                    var result = _userManager.AddToRole(user.Id, "UniversityAdministrator");
                 }
             }
         }

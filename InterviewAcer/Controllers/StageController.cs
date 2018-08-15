@@ -2,12 +2,9 @@
 using InterviewAcer.Repository.Contract;
 using InterviewAcer.Repository.Implementation;
 using System.Threading.Tasks;
-using InterviewAcer.Common.DTO;
 using System;
-using System.Security.Claims;
 using System.Linq;
 using InterviewAcer.RequestClasses;
-using InterviewAcer.ResponseClasses;
 using System.Collections.Generic;
 
 namespace InterviewAcer.Controllers

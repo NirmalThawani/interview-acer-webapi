@@ -34,6 +34,7 @@ namespace InterviewAcer.AuthProvider
                 else
                 {
                     bool isAdmin = false;
+                    bool isUniAdmin = false;
                     var identity = new ClaimsIdentity(context.Options.AuthenticationType);
                     identity.AddClaim(new Claim("sub", context.UserName));
                     if (user != null)
@@ -44,6 +45,10 @@ namespace InterviewAcer.AuthProvider
                             if(userRole.Name == "Administrator")
                             {
                                 isAdmin = true;
+                            }
+                            else if (userRole.Name == "UniversityAdministrator")
+                            {
+                                isUniAdmin = true;
                             }
                             identity.AddClaim(new Claim(ClaimTypes.Role, userRole.Name));
                         }
@@ -60,10 +65,12 @@ namespace InterviewAcer.AuthProvider
                         },
                         {
                             "IsAdmin", isAdmin?"Yes":"No"
+                        },                        
+                        {
+                            "IsUniAdmin", isUniAdmin?"Yes":"No"
                         },
                         {
                             "ProfilePicture",user.ProfilePicture == null ? "NA":user.ProfilePicture
-                            //"ProfilePicture","Hello"
                         }
                     });
 
@@ -78,7 +85,7 @@ namespace InterviewAcer.AuthProvider
         {
             foreach (KeyValuePair<string, string> property in context.Properties.Dictionary)
             {
-                if (property.Key == "Full Name" || property.Key == "User Id"|| property.Key == "ProfilePicture" || property.Key == "IsAdmin")
+                if (property.Key == "Full Name" || property.Key == "User Id"|| property.Key == "ProfilePicture" || property.Key == "IsAdmin" || property.Key == "IsUniAdmin")
                 context.AdditionalResponseParameters.Add(property.Key, property.Value);
             }
 
