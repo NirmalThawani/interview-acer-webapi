@@ -163,7 +163,7 @@ namespace InterviewAcer.AuthRepository
             var users = _userManager.Users;
             foreach(var user in users)
             {
-               if(!_userManager.IsInRole(user.Id, "Administrator"))
+               if(!_userManager.IsInRole(user.Id, "Administrator") && !_userManager.IsInRole(user.Id, "UniversityAdministrator"))
                 {
                     UserGeneralDetailsDTO userDetailItem = new UserGeneralDetailsDTO();
                     userDetailItem.FullName = user.Name;
